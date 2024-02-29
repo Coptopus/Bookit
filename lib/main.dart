@@ -1,4 +1,5 @@
 import 'package:bookit/firebase_options.dart';
+import 'package:bookit/home.dart';
 import 'package:bookit/login.dart';
 import 'package:bookit/register.dart';
 import 'package:bookit/welcome.dart';
@@ -20,7 +21,9 @@ class MainApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white
+          surfaceTintColor: Colors.white,
+          elevation: 5,
+          shadowColor: Colors.black
         )
       ),
       home: const Welcome(),
@@ -28,6 +31,7 @@ class MainApp extends StatelessWidget {
         "welcome":(context) => const Welcome(),
         "login":(context) => const Login(),
         "register":(context) => const Register(),
+        "home":(context) => const Home(),
       },
     );
   }

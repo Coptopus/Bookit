@@ -2,6 +2,65 @@ import 'package:flutter/material.dart';
 
 Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.png', fit: BoxFit.fitHeight,));
 
+  Drawer appDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              onTap: () {},
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(60)
+                    ),
+                    width: 60,
+                    height: 60,
+                    child: const Icon(Icons.person, color: Colors.white, size: 50,),
+                  ),
+                  const Expanded(
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text("Asem Al Ashqar", style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Text("ProfDrAshqar@gmail.com"),
+                      )
+                    )
+                ],
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text("My Account"),
+            leading: const Icon(Icons.person),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text("My Reservations"),
+            leading: const Icon(Icons.receipt),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text("Settings"),
+            leading: const Icon(Icons.settings),
+            onTap: () {},
+          ),
+          Align(
+            child: ListTile(
+              title: const Text("Log Out"),
+              leading: const Icon(Icons.logout),
+              onTap: () {Navigator.of(context).pushReplacementNamed("login");},
+            ),
+          ),
+        ],
+      ),
+      );
+  }
+
 class InputField extends StatefulWidget {
   final String label;
   final TextInputType type;

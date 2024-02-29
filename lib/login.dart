@@ -37,26 +37,21 @@ class _LoginState extends State<Login> {
                 const RememberMe(),
                 const SizedBox(height: 20),
                 MaterialButton(
-                  onPressed: () {}, 
+                  onPressed: () {Navigator.of(context).pushNamedAndRemoveUntil("home", (route) => false);}, 
                   color: const Color.fromARGB(255, 168, 185, 230), 
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), 
                   elevation: 0, 
                   padding: const EdgeInsets.symmetric(horizontal: 140, vertical: 15), 
                   child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),),
                 const SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text("New to Bookit?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                    InkWell(
-                      onTap: () {Navigator.of(context).pop();}, 
-                      child: const Text("Create an account here.", 
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, 
-                            decoration: TextDecoration.underline, 
-                            decorationColor: Color.fromRGBO(93, 125, 212, 1), 
-                            color: Color.fromRGBO(93, 125, 212, 1)), ))
-                  ],
-                )
+                const Text("New to Bookit?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                InkWell(
+                  onTap: () {Navigator.of(context).pushReplacementNamed("welcome");}, 
+                  child: const Text("Create an account here.", 
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, 
+                        decoration: TextDecoration.underline, 
+                        decorationColor: Color.fromRGBO(93, 125, 212, 1), 
+                        color: Color.fromRGBO(93, 125, 212, 1)), ))
               ],
             )
           )
