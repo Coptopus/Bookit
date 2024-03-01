@@ -21,7 +21,7 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
                     ),
                     width: 60,
                     height: 60,
-                    child: const Icon(Icons.person, color: Colors.white, size: 50,),
+                    child:  ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)),
                   ),
                   const Expanded(
                     child: ListTile(
@@ -140,3 +140,209 @@ class _RememberMeState extends State<RememberMe> {
               );
           }
 }
+
+class CategoriesList extends StatelessWidget {
+  final List categories = [
+    {
+      "iconname": Icons.sports_soccer,
+      "title": "Sports & Fitness",
+      "num_places": 2
+    },
+    {
+      "iconname": Icons.restaurant,
+      "title": "Food",
+      "num_places": 3
+    },
+    {
+      "iconname": Icons.medical_services,
+      "title": "Clinics",
+      "num_places": 4
+    },
+    {
+      "iconname": Icons.attractions,
+      "title": "Entertainment",
+      "num_places": 1
+    },
+  ];
+  CategoriesList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(                                                                       //Categories
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {},
+            child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            width: 175,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: Colors.lightBlue[200]), margin: EdgeInsets.only(bottom: 15), child: Icon(categories[index]['iconname'], size: 50, color: Colors.blue[800],),),
+                Text(categories[index]['title'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20),),
+                Text("${categories[index]['num_places']} places", style: TextStyle(color: Colors.grey[600], fontSize: 16),)
+                ],
+              )
+            ),
+          );
+        },
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal, 
+      ),
+    );
+  }
+}
+
+class DashBanner extends StatelessWidget {
+  const DashBanner({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(60)
+                  ),
+                  width: 60,
+                  height: 60,
+                  child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)),
+                  // child: const Icon(Icons.person, color: Colors.white, size: 50,),
+                ),
+              ),
+              const Text("Hello, Asem! \nWhat are we up to today?", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(color: const Color.fromARGB(255, 209, 226, 253), borderRadius: BorderRadius.circular(30)),
+                 child: IconButton(icon: const Icon(Icons.search, color: Color.fromARGB(255, 0, 110, 238),), onPressed: () {},)),
+              IconButton(icon: const Icon(Icons.notifications_outlined, color: Color.fromARGB(255, 0, 110, 238),), onPressed: () {},),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DashList extends StatelessWidget {
+  final String listTitle;
+  const DashList({
+    super.key, required this.listTitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(listTitle, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+              InkWell(onTap: (){}, splashFactory: InkRipple.splashFactory, child: Text("Show all", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold,),))
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 5), 
+          height: 200,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemExtent: 200,
+            scrollDirection: Axis.horizontal,
+            itemCount: services.length,
+            itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {},
+              child: Card(
+                color: Colors.white,
+                elevation: 0,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      height: 110,
+                      child: Image.asset("${services[index]["img"]}", fit: BoxFit.cover),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${services[index]["name"]}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          SizedBox(
+                            height: 20,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: services[index]["rating"],
+                              itemBuilder: (context, index) {
+                                return Icon(Icons.star, color: Colors.orange, size: 20,);
+                              },
+                              ),
+                          ),
+                          Text("(${services[index]["numberOfRatings"]})", style: TextStyle(color: Colors.grey),)
+                        ],
+                      ),
+                    )
+                  ]),
+              ),
+            );
+          },),
+        ),
+      ],
+    );
+  }
+}
+
+List services = [
+  {
+    "img":"assets/soccer.jpg",
+    "name": "Soccer pitch",
+    "type": "sports",
+    "desc": "A soccer pitch available for booking.",
+    "location":"Nasr City",
+    "rating": 5,
+    "numberOfRatings": 203,
+    "priceRng": "50 EGP/hr"
+  },
+  {
+    "img":"assets/padel.jpg",
+    "name": "Padel court",
+    "type": "sports",
+    "desc": "Bring your friends and enjoy a few games of Padel equipped with a Padel and a couple tennis balls!",
+    "location": "Sixth of October City",
+    "rating": 4,
+    "numberOfRatings": 357,
+    "priceRng": "100 EGP/hr"
+  },
+];
