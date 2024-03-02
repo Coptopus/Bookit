@@ -1,3 +1,4 @@
+import 'package:bookit/details.dart';
 import 'package:flutter/material.dart';
 
 Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.png', fit: BoxFit.fitHeight,));
@@ -5,6 +6,7 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
   Drawer appDrawer(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       child: ListView(
         children: [
           Padding(
@@ -49,12 +51,10 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
             leading: const Icon(Icons.settings),
             onTap: () {},
           ),
-          Align(
-            child: ListTile(
-              title: const Text("Log Out"),
-              leading: const Icon(Icons.logout),
-              onTap: () {Navigator.of(context).pushReplacementNamed("login");},
-            ),
+          ListTile(
+            title: const Text("Log Out"),
+            leading: const Icon(Icons.logout),
+            onTap: () {Navigator.of(context).pushReplacementNamed("login");},
           ),
         ],
       ),
@@ -142,7 +142,7 @@ class _RememberMeState extends State<RememberMe> {
 }
 
 class CategoriesList extends StatelessWidget {
-  final List categories = [
+  static List categories = [
     {
       "iconname": Icons.sports_soccer,
       "title": "Sports & Fitness",
@@ -164,7 +164,7 @@ class CategoriesList extends StatelessWidget {
       "num_places": 1
     },
   ];
-  CategoriesList({
+  const CategoriesList({
     super.key,
   });
 
@@ -172,7 +172,7 @@ class CategoriesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 150,
-      child: ListView.builder(                                                                       //Categories
+      child: ListView.builder(
         itemCount: categories.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -186,7 +186,7 @@ class CategoriesList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: Colors.lightBlue[200]), margin: EdgeInsets.only(bottom: 15), child: Icon(categories[index]['iconname'], size: 50, color: Colors.blue[800],),),
+                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: Colors.lightBlue[200]), margin: const EdgeInsets.only(bottom: 15), child: Icon(categories[index]['iconname'], size: 50, color: Colors.blue[800],),),
                 Text(categories[index]['title'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20),),
                 Text("${categories[index]['num_places']} places", style: TextStyle(color: Colors.grey[600], fontSize: 16),)
                 ],
@@ -265,13 +265,13 @@ class DashList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(listTitle, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-              InkWell(onTap: (){}, splashFactory: InkRipple.splashFactory, child: Text("Show all", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold,),))
+              Text(listTitle, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+              InkWell(onTap: (){}, splashFactory: InkRipple.splashFactory, child: const Text("Show all", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold,),))
             ],
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 5), 
+          margin: const EdgeInsets.symmetric(vertical: 5), 
           height: 200,
           child: ListView.builder(
             shrinkWrap: true,
@@ -280,15 +280,15 @@ class DashList extends StatelessWidget {
             itemCount: services.length,
             itemBuilder: (context, index) {
             return InkWell(
-              onTap: () {},
+              onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => Details(data: services[index]),));},
               child: Card(
                 color: Colors.white,
                 elevation: 0,
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 110,
                       child: Image.asset("${services[index]["img"]}", fit: BoxFit.cover),
                     ),
@@ -297,20 +297,24 @@ class DashList extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("${services[index]["name"]}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                          SizedBox(
-                            height: 20,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: services[index]["rating"],
-                              itemBuilder: (context, index) {
-                                return Icon(Icons.star, color: Colors.orange, size: 20,);
-                              },
+                          Text("${services[index]["name"]}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: services[index]["rating"],
+                                  itemBuilder: (context, index) {
+                                    return const Icon(Icons.star, color: Colors.orange, size: 20,);
+                                  },
+                                  ),
                               ),
-                          ),
-                          Text("(${services[index]["numberOfRatings"]})", style: TextStyle(color: Colors.grey),)
+                              Expanded(child: Text("(${services[index]["numberOfRatings"]})", textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey),)),
+                            ],
+                          )
                         ],
                       ),
                     )
@@ -321,6 +325,39 @@ class DashList extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({
+    super.key,
+  });
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  int currentIndex = 0;
+  
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: currentIndex,
+      onTap: (value) {setState(() {currentIndex = value; });},
+      iconSize: 35,
+      selectedFontSize: 15,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+      showSelectedLabels: true,
+      items: const [
+      BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
+      BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), label: "Services"),
+      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
+      BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), label: "Settings")
+    ]);
   }
 }
 
