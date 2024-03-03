@@ -1,4 +1,5 @@
-import 'package:bookit/widgets.dart';
+import 'package:bookit/auth/signup.dart';
+import 'package:bookit/components/LogoAuth.dart';
 import 'package:flutter/material.dart';
 
 class Welcome extends StatelessWidget {
@@ -7,21 +8,19 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: appTitle),
+      // appBar: AppBar(title: appTitle),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 50),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Welcome to Bookit!", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),),
-                Text("Please select your account type to \nget started", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,)
-              ],
-            ),
+          Container(margin: const EdgeInsets.only(top: 20), child: const logoAuth()),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Welcome to Bookit!", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),),
+              Text("Please select your account type to get started", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,)
+            ],
           ),
-          const SizedBox(height: 95,),
+          const SizedBox(height: 50,),
           Center(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,13 +28,15 @@ class Welcome extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed("register");
+                    String accountType = "Customer";
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp(accountType: accountType,),));
                   },
                   child: Column(
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 168, 185, 230),
+                          color: Colors.lightBlue,
+                          border: Border.all(color: const Color.fromARGB(255, 11, 99, 158), width: 5),
                           borderRadius: BorderRadius.circular(30),
                           ),
                         child: const Icon(Icons.person, size: 150, color: Colors.white,),
@@ -45,12 +46,16 @@ class Welcome extends StatelessWidget {
                   ),
                 ),
                  InkWell(
-                  onTap: () {Navigator.of(context).pushNamed("register");},
+                  onTap: () {
+                    String accountType = "Service Provider"; 
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp(accountType: accountType,),));
+                  },
                   child: Column(
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 168, 185, 230),
+                          color: Colors.blueGrey[400],
+                          border: Border.all(color: Colors.black, width: 5),
                           borderRadius: BorderRadius.circular(30),
                           ),
                         child: const Icon(Icons.business, size: 150, color: Colors.white,),
@@ -62,16 +67,24 @@ class Welcome extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 100,),
-          const Text("Already have an account?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-          MaterialButton(
-            onPressed: () {Navigator.of(context).pushNamed("login");}, 
-            color: const Color.fromARGB(255, 168, 185, 230), 
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), 
-            elevation: 0, 
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15), 
-            child: const Text("Go to login page", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-            )
+          const SizedBox(height: 50,),
+          const Text("[*] Customers can make reservations for a variety of services.\n\n[*] Providers promote their services for potential customers.", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+          const SizedBox(height: 50,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text("Already have an account?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              MaterialButton(
+                onPressed: () {Navigator.of(context).pushNamed("login");}, 
+                color: const Color.fromARGB(255, 168, 185, 230), 
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), 
+                elevation: 0, 
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15), 
+                child: const Text("Go to login page", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                ),
+            ],
+          )
         ],
       ),
     );

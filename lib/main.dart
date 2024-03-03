@@ -1,7 +1,6 @@
+import 'package:bookit/auth/login.dart';
 import 'package:bookit/firebase_options.dart';
 import 'package:bookit/home.dart';
-import 'package:bookit/login.dart';
-import 'package:bookit/register.dart';
 import 'package:bookit/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,6 @@ class MainApp extends StatelessWidget {
       routes: {
         "welcome":(context) => const Welcome(),
         "login":(context) => const Login(),
-        "register":(context) => const Register(),
         "home":(context) => const Home(),
       },
     );

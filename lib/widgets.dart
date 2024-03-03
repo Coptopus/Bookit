@@ -61,29 +61,24 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
       );
   }
 
-class InputField extends StatefulWidget {
+class InputField extends StatelessWidget {
   final String label;
   final TextInputType type;
   final bool obscured;
   const InputField({super.key, required this.label, required this.type, required this.obscured});
 
   @override
-  State<InputField> createState() => _InputFieldState();
-}
-
-class _InputFieldState extends State<InputField> {
-  @override
   Widget build(BuildContext context) {
     return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.label, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                Text(label, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 10,),
                 TextFormField(
                   style: const TextStyle(fontSize: 20,),
                   maxLines: 1,
-                  keyboardType: widget.type,
-                  obscureText: widget.obscured,
+                  keyboardType: type,
+                  obscureText: obscured,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color.fromARGB(255, 227, 233, 249),
