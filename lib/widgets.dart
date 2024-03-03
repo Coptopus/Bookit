@@ -79,7 +79,7 @@ class _InputFieldState extends State<InputField> {
               children: [
                 Text(widget.label, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 10,),
-                TextField(
+                TextFormField(
                   style: const TextStyle(fontSize: 20,),
                   maxLines: 1,
                   keyboardType: widget.type,
