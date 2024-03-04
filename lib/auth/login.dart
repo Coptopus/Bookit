@@ -1,6 +1,7 @@
 import 'package:bookit/components/buttonauth.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:bookit/components/textformfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -41,12 +42,23 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 
-                ButtonAuth(label: "Login", onPressed: (){}),
+                ButtonAuth(label: "Login", onPressed: () async {
+                  try {
+                    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
+                    Navigator.of(context).pushReplacementNamed("home");
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'user-not-found') {
+                      print('No user found for that email.');
+                    } else if (e.code == 'wrong-password') {
+                      print('Wrong password provided for that user.');
+                    }
+                  }
+                }),
 
                 const SizedBox(height: 20,),
                 
                 InkWell(
-                  onTap: () {Navigator.of(context).pop();},
+                  onTap: () {Navigator.of(context).pushReplacementNamed("welcome");},
                   child: const Center(
                     child: Text.rich(
                       TextSpan(children: [

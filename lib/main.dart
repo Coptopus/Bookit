@@ -4,14 +4,33 @@ import 'package:bookit/home.dart';
 import 'package:bookit/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
     runApp(const MainApp());
 }
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +44,7 @@ class MainApp extends StatelessWidget {
           shadowColor: Colors.black
         )
       ),
-      home: const Welcome(),
+      home: FirebaseAuth.instance.currentUser == null ? const Login() : const Home(),
       routes: {
         "welcome":(context) => const Welcome(),
         "login":(context) => const Login(),

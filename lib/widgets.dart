@@ -1,4 +1,5 @@
 import 'package:bookit/details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.png', fit: BoxFit.fitHeight,));
@@ -28,8 +29,8 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
                   const Expanded(
                     child: ListTile(
                       contentPadding: EdgeInsets.all(0),
-                      title: Text("Asem Al Ashqar", style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text("ProfDrAshqar@gmail.com"),
+                      title: Text("Asem al Ashqar", style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Text("asem@gmail.com"),
                       )
                     )
                 ],
@@ -54,61 +55,12 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
           ListTile(
             title: const Text("Log Out"),
             leading: const Icon(Icons.logout),
-            onTap: () {Navigator.of(context).pushReplacementNamed("login");},
+            onTap: () async {await FirebaseAuth.instance.signOut(); Navigator.of(context).pushNamedAndRemoveUntil("login", (route) => false);},
           ),
         ],
       ),
       );
   }
-
-class InputField extends StatelessWidget {
-  final String label;
-  final TextInputType type;
-  final bool obscured;
-  const InputField({super.key, required this.label, required this.type, required this.obscured});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                const SizedBox(height: 10,),
-                TextFormField(
-                  style: const TextStyle(fontSize: 20,),
-                  maxLines: 1,
-                  keyboardType: type,
-                  obscureText: obscured,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 227, 233, 249),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
-                  ),
-                ),
-    ]);
-  }
-}
-
-class SignButton extends StatefulWidget {
-  final String text;
-  const SignButton({super.key, required this.text});
-
-  @override
-  State<SignButton> createState() => _SignButtonState();
-}
-
-class _SignButtonState extends State<SignButton> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () {}, 
-      color: const Color.fromARGB(255, 168, 185, 230), 
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), 
-      elevation: 0, 
-      padding: const EdgeInsets.symmetric(horizontal: 140, vertical: 15), 
-      child: Text(widget.text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),);
-  }
-}
 
 class RememberMe extends StatefulWidget {
   const RememberMe({super.key});

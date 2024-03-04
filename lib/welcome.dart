@@ -1,5 +1,5 @@
 import 'package:bookit/auth/signup.dart';
-import 'package:bookit/components/LogoAuth.dart';
+import 'package:bookit/components/logoauth.dart';
 import 'package:flutter/material.dart';
 
 class Welcome extends StatelessWidget {
@@ -12,7 +12,7 @@ class Welcome extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
-          Container(margin: const EdgeInsets.only(top: 20), child: const logoAuth()),
+          Container(margin: const EdgeInsets.only(top: 20), child: const LogoAuth()),
           const Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
