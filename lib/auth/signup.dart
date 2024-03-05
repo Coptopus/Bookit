@@ -57,6 +57,7 @@ class _SignUpState extends State<SignUp> {
                   try {
                     if (password.text == password2.text) {
                     final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text,);
+                    if (kDebugMode) {print(credential);}
                     if (!context.mounted) {return;}
                     Navigator.of(context).pushReplacementNamed("login");
                     FirebaseAuth.instance.currentUser!.sendEmailVerification();
