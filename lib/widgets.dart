@@ -24,13 +24,14 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
                     ),
                     width: 60,
                     height: 60,
-                    child:  ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)),
+                    child: const Icon(Icons.person, color: Colors.white, size: 50,),
+                    // child:  ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
                   ),
                   const Expanded(
                     child: ListTile(
                       contentPadding: EdgeInsets.all(0),
-                      title: Text("Asem al Ashqar", style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text("asem@gmail.com"),
+                      title: Text("[Full Name]", style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Text("[Email address]"),
                       )
                     )
                 ],
@@ -55,7 +56,10 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
           ListTile(
             title: const Text("Log Out"),
             leading: const Icon(Icons.logout),
-            onTap: () async {await FirebaseAuth.instance.signOut(); Navigator.of(context).pushNamedAndRemoveUntil("login", (route) => false);},
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              if (!context.mounted) {return;} 
+              Navigator.of(context).pushNamedAndRemoveUntil("login", (route) => false);},
           ),
         ],
       ),
@@ -174,11 +178,11 @@ class DashBanner extends StatelessWidget {
                   ),
                   width: 60,
                   height: 60,
-                  child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)),
-                  // child: const Icon(Icons.person, color: Colors.white, size: 50,),
+                  // child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
+                  child: const Icon(Icons.person, color: Colors.white, size: 50,),
                 ),
               ),
-              const Text("Hello, Asem! \nWhat are we up to today?", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              const Text("Hello, [name here]! \nWhat are we up to today?", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
             ],
           ),
           Row(

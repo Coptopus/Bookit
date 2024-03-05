@@ -22,13 +22,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {});
     super.initState();
   }
 
@@ -44,7 +38,7 @@ class _MainAppState extends State<MainApp> {
           shadowColor: Colors.black
         )
       ),
-      home: FirebaseAuth.instance.currentUser == null ? const Login() : const Home(),
+      home: FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser!.emailVerified ? const Home() : const Login(),
       routes: {
         "welcome":(context) => const Welcome(),
         "login":(context) => const Login(),
