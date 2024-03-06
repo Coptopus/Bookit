@@ -27,11 +27,11 @@ Widget appTitle = SizedBox(height: 45, child: Image.asset('assets/BookitTitle.pn
                     child: const Icon(Icons.person, color: Colors.white, size: 50,),
                     // child:  ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
                   ),
-                  const Expanded(
+                   Expanded(
                     child: ListTile(
-                      contentPadding: EdgeInsets.all(0),
-                      title: Text("[Full Name]", style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text("[Email address]"),
+                      contentPadding: const EdgeInsets.all(0),
+                      title: const Text("Mohammed Safwat", style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Text("${FirebaseAuth.instance.currentUser!.email}"),
                       )
                     )
                 ],
@@ -122,24 +122,27 @@ class CategoriesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 125,
       child: ListView.builder(
+        padding: const EdgeInsets.only(left: 5, right: 5),
         itemCount: categories.length,
         itemBuilder: (context, index) {
           return InkWell(
+            borderRadius: BorderRadius.circular(30),
+            splashColor: Colors.lightBlue[100],
             onTap: () {},
             child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            margin: const EdgeInsets.symmetric(horizontal: 15),
-            width: 175,
+            margin: const EdgeInsets.all(5),
+            width: 150,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: Colors.lightBlue[200]), margin: const EdgeInsets.only(bottom: 15), child: Icon(categories[index]['iconname'], size: 50, color: Colors.blue[800],),),
-                Text(categories[index]['title'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20),),
-                Text("${categories[index]['num_places']} places", style: TextStyle(color: Colors.grey[600], fontSize: 16),)
+                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: Colors.lightBlue[200]), margin: const EdgeInsets.only(bottom: 10), child: Icon(categories[index]['iconname'], size: 40, color: Colors.blue[800],),),
+                Text(categories[index]['title'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),),
+                Text("${categories[index]['num_places']} places", style: TextStyle(color: Colors.grey[600], fontSize: 15),)
                 ],
               )
             ),
@@ -147,55 +150,6 @@ class CategoriesList extends StatelessWidget {
         },
         shrinkWrap: true,
         scrollDirection: Axis.horizontal, 
-      ),
-    );
-  }
-}
-
-class DashBanner extends StatelessWidget {
-  const DashBanner({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(60)
-                  ),
-                  width: 60,
-                  height: 60,
-                  // child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
-                  child: const Icon(Icons.person, color: Colors.white, size: 50,),
-                ),
-              ),
-              const Text("Hello, [name here]! \nWhat are we up to today?", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(color: const Color.fromARGB(255, 209, 226, 253), borderRadius: BorderRadius.circular(30)),
-                 child: IconButton(icon: const Icon(Icons.search, color: Color.fromARGB(255, 0, 110, 238),), onPressed: () {},)),
-              IconButton(icon: const Icon(Icons.notifications_outlined, color: Color.fromARGB(255, 0, 110, 238),), onPressed: () {},),
-            ],
-          )
-        ],
       ),
     );
   }
@@ -224,24 +178,24 @@ class DashList extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5), 
           height: 200,
-          child: ListView.builder(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
             shrinkWrap: true,
-            itemExtent: 200,
-            scrollDirection: Axis.horizontal,
-            itemCount: services.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 2,
             itemBuilder: (context, index) {
             return InkWell(
               onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => Details(data: services[index]),));},
               child: Card(
                 color: Colors.white,
-                elevation: 0,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
+                elevation: 2,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(
                       height: 110,
-                      child: Image.asset("${services[index]["img"]}", fit: BoxFit.cover),
+                      child: ClipRRect(borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)), child: Image.asset("${services[index]["img"]}", fit: BoxFit.cover)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 8),
@@ -249,6 +203,7 @@ class DashList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("${services[index]["name"]}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          Text("${services[index]["priceRng"]}", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.teal),),
                           Row(
                             children: [
                               SizedBox(
@@ -321,7 +276,7 @@ List services = [
     "location":"Nasr City",
     "rating": 5,
     "numberOfRatings": 203,
-    "priceRng": "50 EGP/hr"
+    "priceRng": "E£ 50 / hr"
   },
   {
     "img":"assets/padel.jpg",
@@ -331,6 +286,6 @@ List services = [
     "location": "Sixth of October City",
     "rating": 4,
     "numberOfRatings": 357,
-    "priceRng": "100 EGP/hr"
+    "priceRng": "E£ 100 / hr"
   },
 ];

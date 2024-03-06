@@ -19,6 +19,7 @@ class _DetailsState extends State<Details> {
       appBar: AppBar(
         title: appTitle,
       ),
+      floatingActionButton: FloatingActionButton.extended(onPressed: () {}, icon: const Icon(Icons.edit_calendar), label: const Text("Book it!", style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900)), backgroundColor: Colors.blue, foregroundColor: Colors.white,),
       body: ListView(
         children: [
           SizedBox(height: 400, child: Image.asset(widget.data["img"], fit: BoxFit.cover,)),
@@ -31,11 +32,11 @@ class _DetailsState extends State<Details> {
                 Text(widget.data["name"], style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900),),
                 Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white,), width: 500, margin: const EdgeInsets.symmetric(vertical: 20), padding: const EdgeInsets.all(10), child: Text(widget.data["desc"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
                 Text("Location: ${widget.data["location"]}", style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                Text(widget.data["priceRng"], style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.blue),),
+                Text(widget.data["priceRng"], style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.teal),),
               ],
             ),
           ),
-          Center(child: MaterialButton(onPressed: () {}, color: Colors.blue, textColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), child: const Text("Book it!", style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),),))
+          // Center(child: MaterialButton(onPressed: () {}, color: Colors.blue, textColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), child: const Text("Book it!", style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),),))
         ],
       ),
     );

@@ -14,6 +14,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
+  bool loading = false;
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
@@ -22,7 +24,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: loading? 
+      const Center(child: CircularProgressIndicator(color: Colors.lightBlue,),) : 
+      Container(
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
@@ -65,7 +69,11 @@ class _LoginState extends State<Login> {
                 ButtonAuth(label: "Login", onPressed: () async {
                   if (formState.currentState!.validate()) {
                   try {
+                    loading = true;
+                    setState(() {});
                     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
+                    loading = false;
+                    setState(() {});
                     if (credential.user!.emailVerified) {
                       if (!context.mounted) {return;}
                       Navigator.of(context).pushReplacementNamed("home");
@@ -81,7 +89,7 @@ class _LoginState extends State<Login> {
                     } else if (e.code == 'wrong-password') {
                       if (!context.mounted) {return;}
                       AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "Wrong password provided for that user.").show();
-                    }
+                    } else {AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "$e", btnOkOnPress: () {},).show();}
                   }
                   }
                 }),

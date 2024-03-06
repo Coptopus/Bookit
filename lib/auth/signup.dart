@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/components/buttonauth.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:bookit/components/textformfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,26 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  addUser() async{
+    if (formState.currentState!.validate()) {
+      try {
+        DocumentReference response =
+        await users.add({
+        "name": name.text,
+        "account_type": widget.accountType,
+        "email": email.text,
+        "points": 0,
+        });
+        if (kDebugMode) {print(response);}
+      } catch (e) {
+        if (!mounted) return;
+        AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "$e", btnOkOnPress: () {},).show();
+      }
+    }
+  }
 
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -40,13 +61,55 @@ class _SignUpState extends State<SignUp> {
                       Text("Creating an account as a ${widget.accountType}", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),),
                       const SizedBox(height: 10,),
                   
-                      CustomTextFormField(label: widget.accountType == "Customer"? "Full Name" : "Company name", hintText: "Enter your name", controller: name, validator: (val) {if (val == "") {return "*This field is required*";}return null;},),
+                      CustomTextFormField(
+                        label: widget.accountType == "Customer"? "Full Name" : "Company name", 
+                        hintText: "Enter your name", 
+                        controller: name, 
+                        validator: (val) {
+                          if (val == "") {
+                            return "*This field is required*";
+                            }
+                            return null;
+                            },
+                            ),
                   
-                      CustomTextFormField(label: "Email", hintText: "Enter your Email", controller: email, validator: (val) {if (val == "") {return "*This field is required*";}return null;},),
+                      CustomTextFormField(
+                        label: "Email", 
+                        hintText: "Enter your Email", 
+                        controller: email, 
+                        validator: (val) {
+                          if (val == "") {
+                            return "*This field is required*";
+                            }
+                            return null;
+                            },
+                            ),
                   
-                      CustomTextFormField(label: "Password", hintText: "Enter your Password", controller: password, obscureText: true, validator: (val) {if (val == "") {return "*This field is required*";}return null;},),
+                      CustomTextFormField(
+                        label: "Password", 
+                        hintText: "Enter your Password", 
+                        controller: password, 
+                        obscureText: true, 
+                        validator: (val) {
+                          if (val == "") {
+                            return "*This field is required*";
+                            }
+                            return null;
+                            },
+                            ),
                   
-                      CustomTextFormField(label: "Confirm password", hintText: "Re-enter your Password", controller: password2, obscureText: true, validator: (val) {if (val == "") {return "*This field is required*";}return null;},),
+                      CustomTextFormField(
+                        label: "Confirm password", 
+                        hintText: "Re-enter your Password", 
+                        controller: password2, 
+                        obscureText: true, 
+                        validator: (val) {
+                          if (val == "") {
+                            return "*This field is required*";
+                            }
+                            return null;
+                            },
+                            ),
                   
                     ],
                   ),
@@ -57,14 +120,14 @@ class _SignUpState extends State<SignUp> {
                   try {
                     if (password.text == password2.text) {
                     final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text,);
+                    addUser();
                     if (kDebugMode) {print(credential);}
                     if (!context.mounted) {return;}
-                    Navigator.of(context).pushReplacementNamed("login");
                     FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                    AwesomeDialog(context: context, dialogType: DialogType.info, animType: AnimType.bottomSlide, title: "Almost there!", desc: "Please check your email for the verification link.", btnOkOnPress: () {},).show();
+                    AwesomeDialog(context: context, dialogType: DialogType.success, animType: AnimType.bottomSlide, title: "Almost there!", desc: "Please check your email for the verification link.", btnOkOnPress: () {Navigator.of(context).pushReplacementNamed("login");},).show();
                     }
                     else {
-                      AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "Please check that the passwords match").show();
+                      AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "Please make sure the passwords match").show();
                       }
 
                     } on FirebaseAuthException catch (e) {
@@ -76,7 +139,9 @@ class _SignUpState extends State<SignUp> {
                           if (!context.mounted) {return;}
                           AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "The account already exists for that email.").show();
                           }
-                        } catch (e) {if (kDebugMode) {print(e);}}
+                        } catch (e) {
+                          AwesomeDialog(context: context, dialogType: DialogType.error, animType: AnimType.bottomSlide, title: "Error", desc: "$e", btnOkOnPress: () {},).show();
+                        }
 
                   }
                 }),
