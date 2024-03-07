@@ -10,7 +10,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,14 +19,16 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: appTitle,
       ),
-      body: ListView(
-        children: const [
-          DashBanner(),
-          CategoriesList(),
-          DashList(listTitle: 'Popular pitches & courts',),
-          DashList(listTitle: 'Restaurants you might like',),
-        ]
-      ),
+      body: ListView(children: const [
+        DashBanner(),
+        CategoriesList(),
+        DashList(
+          listTitle: 'Popular pitches & courts',
+        ),
+        DashList(
+          listTitle: 'Restaurants you might like',
+        ),
+      ]),
     );
   }
 }
