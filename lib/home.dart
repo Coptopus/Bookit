@@ -1,4 +1,5 @@
 import 'package:bookit/components/dash_banner.dart';
+import 'package:bookit/components/drawer.dart';
 import 'package:bookit/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

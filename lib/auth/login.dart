@@ -168,6 +168,8 @@ class _LoginState extends State<Login> {
                               ).show();
                             }
                           } on FirebaseAuthException catch (e) {
+                            loading = false;
+                            setState(() {});
                             if (e.code == 'user-not-found') {
                               if (!context.mounted) {
                                 return;

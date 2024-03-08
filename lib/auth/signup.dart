@@ -20,30 +20,17 @@ class _SignUpState extends State<SignUp> {
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  addUser() async {
-    if (formState.currentState!.validate()) {
-      try {
-        DocumentReference response = await users.add({
-          "name": name.text,
-          "account_type": widget.accountType,
-          "email": email.text,
-          "points": 0,
-        });
-        if (kDebugMode) {
-          print(response);
-        }
-      } catch (e) {
-        if (!mounted) return;
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.error,
-          animType: AnimType.bottomSlide,
-          title: "Error",
-          desc: "$e",
-          btnOkOnPress: () {},
-        ).show();
-      }
-    }
+  Future<void> addUser() {
+    return users
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+          'name': name.text,
+          'account_type': widget.accountType,
+          'email':email.text, 
+          'points': 0
+          })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
   TextEditingController name = TextEditingController();
@@ -175,6 +162,8 @@ class _SignUpState extends State<SignUp> {
                                 },
                               ).show();
                             } else {
+                              loading = false;
+                              setState(() {});
                               AwesomeDialog(
                                       context: context,
                                       dialogType: DialogType.error,
@@ -185,6 +174,8 @@ class _SignUpState extends State<SignUp> {
                                   .show();
                             }
                           } on FirebaseAuthException catch (e) {
+                            loading = false;
+                            setState(() {});
                             if (e.code == 'weak-password') {
                               if (!context.mounted) {
                                 return;
@@ -209,14 +200,27 @@ class _SignUpState extends State<SignUp> {
                                       desc:
                                           "The account already exists for that email.")
                                   .show();
+                            } else {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.bottomSlide,
+                                title: "Error",
+                                desc:
+                                    "Please enter your email in the correct format.",
+                                btnOkOnPress: () {},
+                              ).show();
                             }
                           } catch (e) {
+                            loading = false;
+                            setState(() {});
                             AwesomeDialog(
                               context: context,
                               dialogType: DialogType.error,
                               animType: AnimType.bottomSlide,
                               title: "Error",
-                              desc: "$e",
+                              desc:
+                                  "Please make sure you entered your information correctly.",
                               btnOkOnPress: () {},
                             ).show();
                           }

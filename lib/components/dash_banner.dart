@@ -13,7 +13,7 @@ class DashBanner extends StatefulWidget {
 
 class _DashBannerState extends State<DashBanner> {
   String email = "${FirebaseAuth.instance.currentUser!.email}";
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  // User user = User();
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,31 @@ class _DashBannerState extends State<DashBanner> {
                   ),
                 ),
               ),
-              const Text(
-                "Hello, [name here]! \nWhat are we up to today?",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .get(),
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Something went wrong");
+                  }
+
+                  if (snapshot.hasData && !snapshot.data!.exists) {
+                    return const Text("Document does not exist");
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    Map<String, dynamic> data =
+                        snapshot.data!.data() as Map<String, dynamic>;
+                    return Text(
+                      "Hello, ${data['name']}! \nWhat are we up to today?",
+                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      );
+                  }
+
+                  return const Text("loading");
+                },
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:bookit/components/drawer.dart';
 import 'package:bookit/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class _DetailsState extends State<Details> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 240, 243, 255),
       drawer: appDrawer(context),
-      bottomNavigationBar: const BottomNavBar(),
+      // bottomNavigationBar: const BottomNavBar(),
       appBar: AppBar(
         title: appTitle,
       ),
