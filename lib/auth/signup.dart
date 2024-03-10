@@ -28,9 +28,7 @@ class _SignUpState extends State<SignUp> {
           'account_type': widget.accountType,
           'email':email.text, 
           'points': 0
-          })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+          });
   }
 
   TextEditingController name = TextEditingController();

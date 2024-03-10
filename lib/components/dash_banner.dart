@@ -27,7 +27,7 @@ class _DashBannerState extends State<DashBanner> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {Navigator.of(context).pushNamed("profile");},
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 15),
                   decoration: BoxDecoration(
@@ -35,7 +35,6 @@ class _DashBannerState extends State<DashBanner> {
                       borderRadius: BorderRadius.circular(60)),
                   width: 60,
                   height: 60,
-                  // child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
                   child: const Icon(
                     Icons.person,
                     color: Colors.white,

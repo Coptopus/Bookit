@@ -1,6 +1,7 @@
 import 'package:bookit/auth/login.dart';
 import 'package:bookit/firebase_options.dart';
 import 'package:bookit/home.dart';
+import 'package:bookit/profile.dart';
 import 'package:bookit/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class _MainAppState extends State<MainApp> {
         "welcome": (context) => const Welcome(),
         "login": (context) => const Login(),
         "home": (context) => const Home(),
+        "profile":(context) => const Profile(),
       },
     );
   }

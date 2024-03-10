@@ -11,7 +11,7 @@ Drawer appDrawer(BuildContext context) {
         Padding(
           padding: const EdgeInsets.all(10),
           child: InkWell(
-            onTap: () {},
+            onTap: () {Navigator.of(context).pushNamed("profile");},
             child: Row(
               children: [
                 Container(
@@ -93,7 +93,7 @@ Drawer appDrawer(BuildContext context) {
         ListTile(
           title: const Text("My Account"),
           leading: const Icon(Icons.person),
-          onTap: () {},
+          onTap: () {Navigator.of(context).pushNamed("profile");},
         ),
         ListTile(
           title: const Text("My Reservations"),

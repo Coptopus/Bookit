@@ -10,14 +10,10 @@ Widget appTitle = SizedBox(
 
 class CategoriesList extends StatelessWidget {
   static List categories = [
-    {
-      "iconname": Icons.sports_soccer,
-      "title": "Sports & Fitness",
-      "num_places": 2
-    },
-    {"iconname": Icons.restaurant, "title": "Food", "num_places": 3},
-    {"iconname": Icons.medical_services, "title": "Clinics", "num_places": 4},
-    {"iconname": Icons.attractions, "title": "Entertainment", "num_places": 1},
+    {"iconname": Icons.sports_soccer,"title": "Sports & Fitness","num_places": 2},
+    {"iconname": Icons.restaurant, "title": "Food", "num_places": 2},
+    {"iconname": Icons.medical_services, "title": "Clinics", "num_places": 0},
+    {"iconname": Icons.attractions, "title": "Entertainment", "num_places": 0},
   ];
   const CategoriesList({
     super.key,
@@ -79,9 +75,10 @@ class CategoriesList extends StatelessWidget {
 
 class DashList extends StatelessWidget {
   final String listTitle;
+  final int increment;
   const DashList({
     super.key,
-    required this.listTitle,
+    required this.listTitle, required this.increment,
   });
 
   @override
@@ -122,6 +119,7 @@ class DashList extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 2,
             itemBuilder: (context, index) {
+              index += increment;
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -265,5 +263,27 @@ List services = [
     "rating": 4,
     "numberOfRatings": 357,
     "priceRng": "E£ 100 / hr"
+  },
+  {
+    "img": "assets/baraka.jpg",
+    "name": "Baraka Fried Chicken",
+    "type": "food",
+    "desc":
+        "Best fried chicken you'll ever have!",
+    "location": "Al montazah",
+    "rating": 5,
+    "numberOfRatings": 500,
+    "priceRng": "E£ 85 - 250"
+  },
+  {
+    "img": "assets/italian.jpg",
+    "name": "Virgollini's",
+    "type": "food",
+    "desc":
+        "A sophisticated restaurant offering an assortment of exquisite dishes.",
+    "location": "Zamalek, Cairo",
+    "rating": 5,
+    "numberOfRatings": 100,
+    "priceRng": "E£ 150 - 350"
   },
 ];

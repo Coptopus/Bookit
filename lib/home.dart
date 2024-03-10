@@ -26,9 +26,11 @@ class _HomeState extends State<Home> {
         CategoriesList(),
         DashList(
           listTitle: 'Popular pitches & courts',
+          increment: 0,
         ),
         DashList(
           listTitle: 'Restaurants you might like',
+          increment: 2,
         ),
       ]),
     );
