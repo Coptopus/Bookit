@@ -1,6 +1,8 @@
 import 'package:bookit/components/dash_banner.dart';
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -11,28 +13,79 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 240, 243, 255),
-      drawer: appDrawer(context),
-      bottomNavigationBar: const BottomNavBar(),
-      appBar: AppBar(
-        title: appTitle,
+        backgroundColor: const Color.fromARGB(255, 240, 243, 255),
+        drawer: appDrawer(context),
+        bottomNavigationBar: const BottomNavBar(),
+        appBar: AppBar(
+          title: appTitle,
+        ),
+        body: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Something went wrong");
+            }
+
+            if (snapshot.hasData && !snapshot.data!.exists) {
+              return const Text("Document does not exist");
+            }
+
+            if (snapshot.connectionState == ConnectionState.done) {
+              Map<String, dynamic> data =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              if (data['account_type'] == "Customer") {
+                return const CustomerHome();
+              } else if (data['account_type'] == "Service Provider") {
+                return const ProviderHome();
+              }
+            }
+
+            return const Center(
+                heightFactor: 500,
+                child: CircularProgressIndicator(color: Colors.blue));
+          },
+        ));
+  }
+}
+
+class CustomerHome extends StatelessWidget {
+  const CustomerHome({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(children: const [
+      DashBanner(),
+      CategoriesList(),
+      DashList(
+        listTitle: 'Popular pitches & courts',
+        increment: 0,
       ),
-      body: ListView(children: const [
-        DashBanner(),
-        CategoriesList(),
-        DashList(
-          listTitle: 'Popular pitches & courts',
-          increment: 0,
-        ),
-        DashList(
-          listTitle: 'Restaurants you might like',
-          increment: 2,
-        ),
-      ]),
-    );
+      DashList(
+        listTitle: 'Restaurants you might like',
+        increment: 2,
+      ),
+    ]);
+  }
+}
+
+class ProviderHome extends StatelessWidget {
+  const ProviderHome({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(children: const [
+      DashBanner(),
+    ]);
   }
 }
