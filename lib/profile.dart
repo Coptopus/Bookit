@@ -8,36 +8,47 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     List buttons = [
-  {
-    "icon" : Icons.list,
-    "label" : "Reserved Services",
-    "onPressed": (){if (kDebugMode) {print("Services");}}
-    }, 
-  {
-    "icon" : Icons.star,
-    "label" : "Bookit +",
-    "onPressed": (){if (kDebugMode) {print("Premium");}}
-    }, 
-  {
-    "icon" : Icons.settings,
-    "label" : "Settings",
-    "onPressed": (){if (kDebugMode) {print("Settings");}}
-    },
-  {
-    "icon" : Icons.logout,
-    "label" : "Logout",
-    "onPressed": ()async {
-            await FirebaseAuth.instance.signOut();
-            if (!context.mounted) {
-              return;
-            }
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil("login", (route) => false);
-          },
-    }
-  ];
+      {
+        "icon": Icons.list,
+        "label": "Reserved Services",
+        "onPressed": () {
+          if (kDebugMode) {
+            print("Services");
+          }
+        }
+      },
+      {
+        "icon": Icons.star,
+        "label": "Bookit +",
+        "onPressed": () {
+          if (kDebugMode) {
+            print("Premium");
+          }
+        }
+      },
+      {
+        "icon": Icons.settings,
+        "label": "Settings",
+        "onPressed": () {
+          if (kDebugMode) {
+            print("Settings");
+          }
+        }
+      },
+      {
+        "icon": Icons.logout,
+        "label": "Logout",
+        "onPressed": () async {
+          await FirebaseAuth.instance.signOut();
+          if (!context.mounted) {
+            return;
+          }
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("login", (route) => false);
+        },
+      }
+    ];
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 240, 243, 255),
       body: ListView(
@@ -75,36 +86,18 @@ class Profile extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done) {
                     Map<String, dynamic> data =
                         snapshot.data!.data() as Map<String, dynamic>;
-                    return Text(
-                      "${data['name']}",
-                      style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                    );
-                  }
-
-                  return const Text("loading");
-                },
-              ),
-              FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .get(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went wrong");
-                  }
-
-                  if (snapshot.hasData && !snapshot.data!.exists) {
-                    return const Text("Document does not exist");
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    Map<String, dynamic> data =
-                        snapshot.data!.data() as Map<String, dynamic>;
-                    return Text(
-                      "${data['email']}",
-                      style: const TextStyle(fontSize: 15),
+                    return Column(
+                      children: [
+                        Text(
+                          "${data['name']}",
+                          style: const TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${data['email']}",
+                          style: const TextStyle(fontSize: 15),
+                        )
+                      ],
                     );
                   }
 
@@ -117,8 +110,7 @@ class Profile extends StatelessWidget {
                     flex: 2,
                     child: Container(
                       padding: const EdgeInsets.all(20),
-                      margin:
-                          const EdgeInsets.symmetric(vertical: 20),
+                      margin: const EdgeInsets.symmetric(vertical: 20),
                       height: 200,
                       decoration: BoxDecoration(
                           color: Colors.deepOrange,
@@ -172,7 +164,8 @@ class Profile extends StatelessWidget {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                      margin:
+                          const EdgeInsets.only(left: 10, top: 20, bottom: 20),
                       height: 200,
                       decoration: BoxDecoration(
                           color: Colors.lightBlue[100],
@@ -216,18 +209,25 @@ class Profile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   MaterialButton(
-                      onPressed: buttons[index]["onPressed"],
-                      padding: const EdgeInsets.all(10),
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(child: Icon(buttons[index]["icon"])),
-                          Expanded(flex: 3, child: Text("${buttons[index]['label']}", style: const TextStyle(fontSize: 35),)),
-                        ],
-                      ),
-                      ),
-                      const SizedBox(height: 10,)
+                    onPressed: buttons[index]["onPressed"],
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(child: Icon(buttons[index]["icon"])),
+                        Expanded(
+                            flex: 3,
+                            child: Text(
+                              "${buttons[index]['label']}",
+                              style: const TextStyle(fontSize: 35),
+                            )),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  )
                 ],
               );
             },
