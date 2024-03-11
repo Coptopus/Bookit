@@ -21,24 +21,24 @@ class Profile extends StatelessWidget {
                   snapshot.data!.data() as Map<String, dynamic>;
               List buttons = [
                 data['account_type'] == "Customer"
-                      ?{
-                  "icon": Icons.list,
-                  "label": "Reserved Services",
-                  "onPressed": () {
-                    if (kDebugMode) {
-                      print("Services");
-                    }
-                  }
-                }:
-                {
-                  "icon": Icons.point_of_sale,
-                  "label": "My Services",
-                  "onPressed": () {
-                    if (kDebugMode) {
-                      print("Services");
-                    }
-                  }
-                },
+                    ? {
+                        "icon": Icons.list,
+                        "label": "Reserved Services",
+                        "onPressed": () {
+                          if (kDebugMode) {
+                            print("Services");
+                          }
+                        }
+                      }
+                    : {
+                        "icon": Icons.point_of_sale,
+                        "label": "My Services",
+                        "onPressed": () {
+                          if (kDebugMode) {
+                            print("Services");
+                          }
+                        }
+                      },
                 {
                   "icon": Icons.star,
                   "label": "Bookit +",
@@ -82,11 +82,17 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(60)),
                       width: 100,
                       height: 100,
-                      child: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 90,
-                      ),
+                      child: data['account_type'] == "Customer"
+                          ? const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 90,
+                            )
+                          : const Icon(
+                              Icons.business,
+                              color: Colors.white,
+                              size: 90,
+                            ),
                     ),
                     Text(
                       "${data['name']}",
