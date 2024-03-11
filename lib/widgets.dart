@@ -1,4 +1,6 @@
 import 'package:bookit/details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 Widget appTitle = SizedBox(
@@ -10,7 +12,11 @@ Widget appTitle = SizedBox(
 
 class CategoriesList extends StatelessWidget {
   static List categories = [
-    {"iconname": Icons.sports_soccer,"title": "Sports & Fitness","num_places": 2},
+    {
+      "iconname": Icons.sports_soccer,
+      "title": "Sports & Fitness",
+      "num_places": 2
+    },
     {"iconname": Icons.restaurant, "title": "Food", "num_places": 2},
     {"iconname": Icons.medical_services, "title": "Clinics", "num_places": 0},
     {"iconname": Icons.attractions, "title": "Entertainment", "num_places": 0},
@@ -78,7 +84,8 @@ class DashList extends StatelessWidget {
   final int increment;
   const DashList({
     super.key,
-    required this.listTitle, required this.increment,
+    required this.listTitle,
+    required this.increment,
   });
 
   @override
@@ -215,30 +222,70 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-        iconSize: 35,
-        selectedFontSize: 15,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt_outlined), label: "Services"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined), label: "Settings")
-        ]);
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          if (data['account_type'] == "Customer") {
+            return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: currentIndex,
+                onTap: (value) {
+                  setState(() {
+                    currentIndex = value;
+                  });
+                },
+                iconSize: 35,
+                selectedFontSize: 15,
+                selectedItemColor: Colors.blue,
+                unselectedItemColor: Colors.grey,
+                showUnselectedLabels: true,
+                showSelectedLabels: true,
+                items: const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.home_outlined), label: "Home"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.list_alt_outlined), label: "Services"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings_outlined), label: "Settings")
+                ]);
+          } else {
+            return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: currentIndex,
+                onTap: (value) {
+                  setState(() {
+                    currentIndex = value;
+                  });
+                },
+                iconSize: 35,
+                selectedFontSize: 15,
+                selectedItemColor: Colors.blueGrey[800],
+                unselectedItemColor: Colors.grey,
+                showUnselectedLabels: true,
+                showSelectedLabels: true,
+                items: const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.home_outlined), label: "Home"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings_outlined), label: "Settings")
+                ]);
+          }
+        }
+        return const Center(
+            heightFactor: 500,
+            child: CircularProgressIndicator(
+              color: Colors.blue,
+            ));
+      },
+    );
   }
 }
 
@@ -268,8 +315,7 @@ List services = [
     "img": "assets/baraka.jpg",
     "name": "Baraka Fried Chicken",
     "type": "food",
-    "desc":
-        "Best fried chicken you'll ever have!",
+    "desc": "Best fried chicken you'll ever have!",
     "location": "Al montazah",
     "rating": 5,
     "numberOfRatings": 500,
