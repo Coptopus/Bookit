@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:bookit/components/buttonauth.dart';
 import 'package:bookit/components/textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddService extends StatefulWidget {
   const AddService({super.key});
@@ -11,6 +14,19 @@ class AddService extends StatefulWidget {
 
 class _AddServiceState extends State<AddService> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
+
+  File? file;
+  getImage() async {
+    final ImagePicker picker = ImagePicker();
+    // Pick an image.
+    final XFile? imageGallery =
+        await picker.pickImage(source: ImageSource.gallery);
+    // Capture a photo.
+    // final XFile? imageCamera =
+    //     await picker.pickImage(source: ImageSource.camera);
+    file = File(imageGallery!.path);
+    setState(() {});
+  }
 
   TextEditingController name = TextEditingController();
   String? type;
@@ -32,11 +48,62 @@ class _AddServiceState extends State<AddService> {
         key: formState,
         child: ListView(
           children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              child: Text(
+                "Please fill all the fields in the form:",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+              ),
+            ),
+
+            //Image
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              child: Column(
+                children: [
+                  file != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.file(
+                                file!,
+                                height: 300,
+                                width: 500,
+                                fit: BoxFit.cover,
+                              )),
+                        )
+                      : Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(bottom: 20),
+                          height: 300,
+                          width: 500,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey[300]),
+                          child: const Icon(
+                            Icons.add_photo_alternate,
+                            size: 100,
+                            color: Colors.grey,
+                          ),
+                        ),
+                  ButtonAuth(
+                    label: "Get Image",
+                    onPressed: () async {
+                      await getImage();
+                    },
+                    color: Colors.blueGrey,
+                    textColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+
             //Name
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: CustomTextFormField2(
-                label: "Service Name",
+                label: "Service Name:",
                 hintText: "The name of the service you'll provide",
                 controller: name,
                 validator: (val) {
@@ -55,7 +122,7 @@ class _AddServiceState extends State<AddService> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Service Category",
+                    "Service Category:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Column(
@@ -143,7 +210,7 @@ class _AddServiceState extends State<AddService> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Description",
+                    "Description:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
@@ -189,7 +256,7 @@ class _AddServiceState extends State<AddService> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: CustomTextFormField2(
-                label: "Service Address",
+                label: "Service Address:",
                 hintText: "The location of the service you'll provide",
                 controller: location,
                 validator: (val) {
@@ -205,7 +272,7 @@ class _AddServiceState extends State<AddService> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: CustomTextFormField2(
-                label: "Service Price Range",
+                label: "Service Price Range:",
                 hintText: "e.g. \"100 / hr\" or \"100-200\" ",
                 controller: priceRng,
                 validator: (val) {
@@ -219,6 +286,8 @@ class _AddServiceState extends State<AddService> {
             Center(
                 heightFactor: 2,
                 child: ButtonAuth(
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
                   label: "Add",
                   onPressed: () {},
                 ))
@@ -230,6 +299,4 @@ class _AddServiceState extends State<AddService> {
 }
 
 //TO DO
-// Create a new custom text field to add new services.
-// Create corresponding TextEditingControllers.
 // Create the addition method, this adds all above data along with current user info.

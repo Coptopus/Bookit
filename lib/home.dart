@@ -103,7 +103,7 @@ class ProviderHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.add, color: Colors.blueGrey[700], size: 60,),
-              const Text("(Add a service)", style: TextStyle(fontSize: 25,),)
+              Text("(Add a service)", style: TextStyle(fontSize: 25, color: Colors.blueGrey[700]),)
             ],
           ),
         ),
