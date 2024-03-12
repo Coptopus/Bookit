@@ -84,8 +84,30 @@ class ProviderHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: const [
-      DashBanner(),
+    return ListView(children: [
+      const DashBanner(),
+      InkWell(
+        borderRadius: BorderRadius.circular(20),
+        splashColor: Colors.blueGrey[50],
+        onTap: () {Navigator.of(context).pushNamed("addServ");},
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueGrey[100],
+            border: Border.all(color: Colors.blueGrey),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          height: 125,
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add, color: Colors.blueGrey[700], size: 60,),
+              const Text("(Add a service)", style: TextStyle(fontSize: 25,),)
+            ],
+          ),
+        ),
+      )
     ]);
   }
 }

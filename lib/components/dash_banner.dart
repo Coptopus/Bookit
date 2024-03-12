@@ -116,7 +116,7 @@ class _DashBannerState extends State<DashBanner> {
           );
         }
 
-        return const Text("loading");
+        return const Center(heightFactor: 500, child: CircularProgressIndicator(color: Colors.blue,),);
       },
     );
   }

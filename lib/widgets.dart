@@ -161,7 +161,7 @@ class DashList extends StatelessWidget {
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               Text(
-                                "${services[index]["priceRng"]}",
+                                "E£ ${services[index]["priceRng"]}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 16,
@@ -298,7 +298,7 @@ List services = [
     "location": "Nasr City",
     "rating": 5,
     "numberOfRatings": 203,
-    "priceRng": "E£ 50 / hr"
+    "priceRng": "50 / hr"
   },
   {
     "img": "assets/padel.jpg",
@@ -309,7 +309,7 @@ List services = [
     "location": "Sixth of October City",
     "rating": 4,
     "numberOfRatings": 357,
-    "priceRng": "E£ 100 / hr"
+    "priceRng": "100 / hr"
   },
   {
     "img": "assets/baraka.jpg",
@@ -319,7 +319,7 @@ List services = [
     "location": "Al montazah",
     "rating": 5,
     "numberOfRatings": 500,
-    "priceRng": "E£ 85 - 250"
+    "priceRng": "85 - 250"
   },
   {
     "img": "assets/italian.jpg",
@@ -330,6 +330,6 @@ List services = [
     "location": "Zamalek, Cairo",
     "rating": 5,
     "numberOfRatings": 100,
-    "priceRng": "E£ 150 - 350"
+    "priceRng": "150 - 350"
   },
 ];
