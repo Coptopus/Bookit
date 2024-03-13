@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 
 import 'package:bookit/components/buttonauth.dart';
@@ -40,7 +41,9 @@ class _AddServiceState extends State<AddService> {
   String? type;
   TextEditingController desc = TextEditingController();
   TextEditingController location = TextEditingController();
-  TextEditingController priceRng = TextEditingController();
+  bool timed = false;
+  bool oneTime = false;
+  TextEditingController price = TextEditingController();
   CollectionReference service =
       FirebaseFirestore.instance.collection('services');
   bool isComplete = false;
@@ -59,11 +62,15 @@ class _AddServiceState extends State<AddService> {
           "type": type,
           "desc": desc.text,
           "location": location.text,
-          "priceRng": priceRng.text
+          "timed": timed,
+          "oneTime": oneTime,
+          "price": price.text,
         });
         isComplete = true;
       } catch (e) {
-        print("Error $e");
+        if (kDebugMode) {
+          print("Error $e");
+        }
       }
     }
   }
@@ -148,6 +155,7 @@ class _AddServiceState extends State<AddService> {
               child: CustomTextFormField2(
                 label: "Service Name:",
                 hintText: "The name of the service you'll provide",
+                textInputType: TextInputType.name,
                 controller: name,
                 validator: (val) {
                   if (val == '') {
@@ -260,8 +268,9 @@ class _AddServiceState extends State<AddService> {
                     height: 10,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.multiline,
                     maxLines: 10,
-                    minLines: 5,
+                    minLines: 3,
                     cursorColor: Colors.blueGrey,
                     cursorErrorColor: Colors.red,
                     validator: (value) {
@@ -301,6 +310,7 @@ class _AddServiceState extends State<AddService> {
               child: CustomTextFormField2(
                 label: "Service Address:",
                 hintText: "The location of the service you'll provide",
+                textInputType: TextInputType.streetAddress,
                 controller: location,
                 validator: (val) {
                   if (val == '') {
@@ -309,15 +319,42 @@ class _AddServiceState extends State<AddService> {
                   return null;
                 },
               ),
-
-              //PriceRange
             ),
+
+            //Checkboxes
+            CheckboxListTile(
+              activeColor: Colors.blueGrey,
+              title: const Text(
+                "This service is timed.",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              value: timed,
+              onChanged: (value) {
+                timed = value!;
+                setState(() {});
+              },
+            ),
+            CheckboxListTile(
+              activeColor: Colors.blueGrey,
+              title: const Text(
+                "This service is a one-time event.\n(Remember to include date and time in the description if true)",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              value: oneTime,
+              onChanged: (value) {
+                oneTime = value!;
+                setState(() {});
+              },
+            ),
+
+            //Price
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: CustomTextFormField2(
-                label: "Service Price Range:",
-                hintText: "e.g. \"100 / hr\" or \"100-200\" ",
-                controller: priceRng,
+                label: "Service Price:",
+                hintText: "If service is timed, enter the price per hour.",
+                textInputType: TextInputType.number,
+                controller: price,
                 validator: (val) {
                   if (val == '') {
                     return "This field's required";
@@ -332,12 +369,12 @@ class _AddServiceState extends State<AddService> {
                   color: Colors.blueGrey,
                   textColor: Colors.white,
                   label: "Add",
-                  onPressed: () async{
+                  onPressed: () async {
                     await addService();
                     if (isComplete) {
-                    if (!context.mounted) {
-                      return;
-                    }
+                      if (!context.mounted) {
+                        return;
+                      }
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil('home', (route) => false);
                     }
@@ -349,6 +386,3 @@ class _AddServiceState extends State<AddService> {
     );
   }
 }
-
-//TO DO
-// Create the addition method, this adds all above data along with current user info.

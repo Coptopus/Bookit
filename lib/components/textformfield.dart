@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String label;
@@ -64,6 +65,7 @@ class CustomTextFormField2 extends StatelessWidget {
   final String label;
   final String hintText;
   final TextEditingController controller;
+  final TextInputType textInputType;
   final String? Function(String?)? validator;
 
   const CustomTextFormField2(
@@ -71,6 +73,7 @@ class CustomTextFormField2 extends StatelessWidget {
       required this.label,
       required this.hintText,
       required this.controller,
+      this.textInputType = TextInputType.text,
       required this.validator});
 
   @override
@@ -92,6 +95,7 @@ class CustomTextFormField2 extends StatelessWidget {
             cursorErrorColor: Colors.red,
             validator: validator,
             controller: controller,
+            keyboardType: textInputType,
             style: const TextStyle(
               fontSize: 20,
             ),
