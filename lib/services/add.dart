@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart';
 
 import 'package:bookit/components/buttonauth.dart';
 import 'package:bookit/components/textformfield.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -16,6 +19,8 @@ class _AddServiceState extends State<AddService> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
   File? file;
+  dynamic imgName;
+  String? imageURL;
   getImage() async {
     final ImagePicker picker = ImagePicker();
     // Pick an image.
@@ -24,8 +29,11 @@ class _AddServiceState extends State<AddService> {
     // Capture a photo.
     // final XFile? imageCamera =
     //     await picker.pickImage(source: ImageSource.camera);
-    file = File(imageGallery!.path);
-    setState(() {});
+    if (imageGallery != null) {
+      file = File(imageGallery.path);
+      imgName = basename(imageGallery.path);
+      setState(() {});
+    }
   }
 
   TextEditingController name = TextEditingController();
@@ -33,6 +41,32 @@ class _AddServiceState extends State<AddService> {
   TextEditingController desc = TextEditingController();
   TextEditingController location = TextEditingController();
   TextEditingController priceRng = TextEditingController();
+  CollectionReference service =
+      FirebaseFirestore.instance.collection('services');
+  bool isComplete = false;
+  addService() async {
+    if (formState.currentState!.validate()) {
+      try {
+        if (imgName != null) {
+          var refStorage = FirebaseStorage.instance.ref(imgName);
+          await refStorage.putFile(file!);
+          imageURL = await refStorage.getDownloadURL();
+        }
+
+        await service.add({
+          "img": imageURL ?? "none",
+          "name": name.text,
+          "type": type,
+          "desc": desc.text,
+          "location": location.text,
+          "priceRng": priceRng.text
+        });
+        isComplete = true;
+      } catch (e) {
+        print("Error $e");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +121,23 @@ class _AddServiceState extends State<AddService> {
                             color: Colors.grey,
                           ),
                         ),
-                  ButtonAuth(
-                    label: "Get Image",
-                    onPressed: () async {
-                      await getImage();
-                    },
-                    color: Colors.blueGrey,
-                    textColor: Colors.white,
-                  ),
+                  file != null
+                      ? ButtonAuth(
+                          label: "Change Image",
+                          onPressed: () async {
+                            await getImage();
+                          },
+                          color: Colors.blueGrey,
+                          textColor: Colors.white,
+                        )
+                      : ButtonAuth(
+                          label: "Get Image",
+                          onPressed: () async {
+                            await getImage();
+                          },
+                          color: Colors.blueGrey,
+                          textColor: Colors.white,
+                        ),
                 ],
               ),
             ),
@@ -130,11 +173,11 @@ class _AddServiceState extends State<AddService> {
                       RadioListTile(
                         activeColor: Colors.blueGrey,
                         title: const Text(
-                          "Sports/Fitness",
+                          "Sports & Fitness",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        value: "sports/fitness",
+                        value: "Sports & Fitness",
                         groupValue: type,
                         onChanged: (value) {
                           type = value;
@@ -148,7 +191,7 @@ class _AddServiceState extends State<AddService> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        value: "food",
+                        value: "Food",
                         groupValue: type,
                         onChanged: (value) {
                           type = value;
@@ -162,7 +205,7 @@ class _AddServiceState extends State<AddService> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        value: "clinics",
+                        value: "Clinics",
                         groupValue: type,
                         onChanged: (value) {
                           type = value;
@@ -176,7 +219,7 @@ class _AddServiceState extends State<AddService> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        value: "entertainment",
+                        value: "Entertainment",
                         groupValue: type,
                         onChanged: (value) {
                           type = value;
@@ -190,7 +233,7 @@ class _AddServiceState extends State<AddService> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        value: "other",
+                        value: "Other",
                         groupValue: type,
                         onChanged: (value) {
                           type = value;
@@ -289,7 +332,16 @@ class _AddServiceState extends State<AddService> {
                   color: Colors.blueGrey,
                   textColor: Colors.white,
                   label: "Add",
-                  onPressed: () {},
+                  onPressed: () async{
+                    await addService();
+                    if (isComplete) {
+                    if (!context.mounted) {
+                      return;
+                    }
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('home', (route) => false);
+                    }
+                  },
                 ))
           ],
         ),

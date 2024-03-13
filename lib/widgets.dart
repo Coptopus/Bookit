@@ -12,14 +12,11 @@ Widget appTitle = SizedBox(
 
 class CategoriesList extends StatelessWidget {
   static List categories = [
-    {
-      "iconname": Icons.sports_soccer,
-      "title": "Sports & Fitness",
-      "num_places": 2
-    },
+    {"iconname": Icons.sports_soccer, "title": "Sports & Fitness", "num_places": 2},
     {"iconname": Icons.restaurant, "title": "Food", "num_places": 2},
     {"iconname": Icons.medical_services, "title": "Clinics", "num_places": 0},
     {"iconname": Icons.attractions, "title": "Entertainment", "num_places": 0},
+    {"iconname": Icons.more_horiz_outlined, "title": "Other", "num_places": 0},
   ];
   const CategoriesList({
     super.key,
