@@ -1,5 +1,6 @@
-import 'package:bookit/components/dash_banner.dart';
 import 'package:bookit/components/drawer.dart';
+import 'package:bookit/subpages/customer_home.dart';
+import 'package:bookit/subpages/provider_home.dart';
 import 'package:bookit/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,59 +56,5 @@ class _HomeState extends State<Home> {
   }
 }
 
-class CustomerHome extends StatelessWidget {
-  const CustomerHome({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView(children: const [
-      DashBanner(),
-      CategoriesList(),
-      DashList(
-        listTitle: 'Popular pitches & courts',
-        increment: 0,
-      ),
-      DashList(
-        listTitle: 'Restaurants you might like',
-        increment: 2,
-      ),
-    ]);
-  }
-}
 
-class ProviderHome extends StatelessWidget {
-  const ProviderHome({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(children: [
-      const DashBanner(),
-      InkWell(
-        borderRadius: BorderRadius.circular(20),
-        splashColor: Colors.blueGrey[50],
-        onTap: () {Navigator.of(context).pushNamed("addServ");},
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blueGrey[100],
-            border: Border.all(color: Colors.blueGrey),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          height: 125,
-          alignment: Alignment.center,
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add, color: Colors.blueGrey[700], size: 60,),
-              Text("(Add a service)", style: TextStyle(fontSize: 25, color: Colors.blueGrey[700]),)
-            ],
-          ),
-        ),
-      )
-    ]);
-  }
-}
