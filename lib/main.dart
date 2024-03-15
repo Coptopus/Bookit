@@ -1,6 +1,8 @@
 import 'package:bookit/auth/login.dart';
 import 'package:bookit/firebase_options.dart';
 import 'package:bookit/home.dart';
+import 'package:bookit/profile.dart';
+import 'package:bookit/services/add.dart';
 import 'package:bookit/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,13 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+            surfaceTint: Colors.white,
+            primary: Colors.black,
+          ),
+          // primarySwatch: Colors.lightBlue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white,
@@ -46,6 +55,8 @@ class _MainAppState extends State<MainApp> {
         "welcome": (context) => const Welcome(),
         "login": (context) => const Login(),
         "home": (context) => const Home(),
+        "profile": (context) => const Profile(),
+        "addServ": (context) => const AddService(),
       },
     );
   }

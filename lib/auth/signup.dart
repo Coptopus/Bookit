@@ -21,16 +21,12 @@ class _SignUpState extends State<SignUp> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   Future<void> addUser() {
-    return users
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
-          'name': name.text,
-          'account_type': widget.accountType,
-          'email':email.text, 
-          'points': 0
-          })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    return users.doc(FirebaseAuth.instance.currentUser!.uid).set({
+      'name': name.text,
+      'account_type': widget.accountType,
+      'email': email.text,
+      'points': 0
+    });
   }
 
   TextEditingController name = TextEditingController();
@@ -45,6 +41,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       body: loading
           ? const Center(
+              heightFactor: 500,
               child: CircularProgressIndicator(
                 color: Colors.lightBlue,
               ),

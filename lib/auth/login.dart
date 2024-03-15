@@ -25,6 +25,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: loading
           ? const Center(
+              heightFactor: 500,
               child: CircularProgressIndicator(
                 color: Colors.lightBlue,
               ),

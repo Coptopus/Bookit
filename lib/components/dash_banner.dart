@@ -12,91 +12,116 @@ class DashBanner extends StatefulWidget {
 }
 
 class _DashBannerState extends State<DashBanner> {
-  String email = "${FirebaseAuth.instance.currentUser!.email}";
-  // User user = User();
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(60)),
-                  width: 60,
-                  height: 60,
-                  // child: ClipRRect(borderRadius: BorderRadius.circular(60), child: Image.asset("assets/file.jpg", fit: BoxFit.cover)), //User profile pic
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                ),
-              ),
-              FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .get(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went wrong");
-                  }
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Something went wrong");
+        }
 
-                  if (snapshot.hasData && !snapshot.data!.exists) {
-                    return const Text("Document does not exist");
-                  }
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return const Text("Document does not exist");
+        }
 
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    Map<String, dynamic> data =
-                        snapshot.data!.data() as Map<String, dynamic>;
-                    return Text(
-                      "Hello, ${data['name']}! \nWhat are we up to today?",
-                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                      );
-                  }
-
-                  return const Text("loading");
-                },
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 209, 226, 253),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.search,
-                      color: Color.fromARGB(255, 0, 110, 238),
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed("profile");
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(60)),
+                        width: 60,
+                        height: 60,
+                        child: data['account_type'] == "Customer"
+                            ? const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 50,
+                              )
+                            : const Icon(
+                                Icons.business,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                      ),
                     ),
-                    onPressed: () {},
-                  )),
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_outlined,
-                  color: Color.fromARGB(255, 0, 110, 238),
+                    data['account_type'] == "Customer"
+                        ? Text(
+                            "Hello, ${data['name']}! \nWhat are we up to today?",
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )
+                        : Text(
+                            "Welcome, ${data['name']}.",
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                  ],
                 ),
-                onPressed: () {},
-              ),
-            ],
-          )
-        ],
-      ),
+                data['account_type'] != "Customer"
+                    ? IconButton(
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.blueGrey,
+                        ),
+                        onPressed: () {},
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 209, 226, 253),
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.search,
+                                  color: Color.fromARGB(255, 0, 110, 238),
+                                ),
+                                onPressed: () {},
+                              )),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.notifications_outlined,
+                              color: Color.fromARGB(255, 0, 110, 238),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      )
+              ],
+            ),
+          );
+        }
+
+        return const Center(
+          heightFactor: 500,
+          child: CircularProgressIndicator(
+            color: Colors.blue,
+          ),
+        );
+      },
     );
   }
 }
