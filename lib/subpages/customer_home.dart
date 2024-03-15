@@ -1,3 +1,4 @@
+import 'package:bookit/components/categories_list.dart';
 import 'package:bookit/components/dash_banner.dart';
 import 'package:bookit/widgets.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,11 @@ class _CustomerHomeState extends State<CustomerHome> {
       CategoriesList(),
       DashList(
         listTitle: 'Popular pitches & courts',
-        increment: 0,
+        categ: "Sports & Fitness",
       ),
       DashList(
         listTitle: 'Restaurants you might like',
-        increment: 2,
+        categ: "Food",
       ),
     ]);
   }

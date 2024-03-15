@@ -34,7 +34,13 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+            surfaceTint: Colors.white,
+            primary: Colors.black,
+          ),
+          // primarySwatch: Colors.lightBlue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white,
@@ -49,8 +55,8 @@ class _MainAppState extends State<MainApp> {
         "welcome": (context) => const Welcome(),
         "login": (context) => const Login(),
         "home": (context) => const Home(),
-        "profile":(context) => const Profile(),
-        "addServ":(context) => const AddService(),
+        "profile": (context) => const Profile(),
+        "addServ": (context) => const AddService(),
       },
     );
   }

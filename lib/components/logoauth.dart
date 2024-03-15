@@ -18,3 +18,10 @@ class LogoAuth extends StatelessWidget {
     );
   }
 }
+
+Widget appTitle = SizedBox(
+    height: 45,
+    child: Image.asset(
+      'assets/BookitTitle.png',
+      fit: BoxFit.fitHeight,
+    ));

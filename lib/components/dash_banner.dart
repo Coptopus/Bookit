@@ -44,79 +44,83 @@ class _DashBannerState extends State<DashBanner> {
                       onTap: () {
                         Navigator.of(context).pushNamed("profile");
                       },
-                      child: 
-                      Container(
+                      child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(60)),
                         width: 60,
                         height: 60,
-                        child: 
-                        data['account_type'] == "Customer"?
-                        const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 50,
-                        ):
-                        const Icon(
-                          Icons.business,
-                          color: Colors.white,
-                          size: 50,
-                        ),
+                        child: data['account_type'] == "Customer"
+                            ? const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 50,
+                              )
+                            : const Icon(
+                                Icons.business,
+                                color: Colors.white,
+                                size: 50,
+                              ),
                       ),
                     ),
-                    data['account_type'] == "Customer"?
-                    Text(
-                      "Hello, ${data['name']}! \nWhat are we up to today?",
-                      style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                    ):
-                    Text(
-                      "Welcome, ${data['name']}.",
-                      style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
+                    data['account_type'] == "Customer"
+                        ? Text(
+                            "Hello, ${data['name']}! \nWhat are we up to today?",
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )
+                        : Text(
+                            "Welcome, ${data['name']}.",
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
                   ],
                 ),
-                data['account_type'] != "Customer"?
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_outlined,
-                        color: Colors.blueGrey,
-                      ),
-                      onPressed: () {},
-                    ):
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 209, 226, 253),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Color.fromARGB(255, 0, 110, 238),
+                data['account_type'] != "Customer"
+                    ? IconButton(
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.blueGrey,
+                        ),
+                        onPressed: () {},
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 209, 226, 253),
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.search,
+                                  color: Color.fromARGB(255, 0, 110, 238),
+                                ),
+                                onPressed: () {},
+                              )),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.notifications_outlined,
+                              color: Color.fromARGB(255, 0, 110, 238),
+                            ),
+                            onPressed: () {},
                           ),
-                          onPressed: () {},
-                        )),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_outlined,
-                        color: Color.fromARGB(255, 0, 110, 238),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                )
+                        ],
+                      )
               ],
             ),
           );
         }
 
-        return const Center(heightFactor: 500, child: CircularProgressIndicator(color: Colors.blue,),);
+        return const Center(
+          heightFactor: 500,
+          child: CircularProgressIndicator(
+            color: Colors.blue,
+          ),
+        );
       },
     );
   }
