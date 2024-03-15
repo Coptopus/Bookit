@@ -97,6 +97,7 @@ class _AddServiceState extends State<AddService> {
           "location": location.text,
           "timed": timed,
           "oneTime": oneTime,
+          "oneTimeDate": dateTime,
           "price": price.text,
         });
         isComplete = true;

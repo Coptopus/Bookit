@@ -94,6 +94,14 @@ class DashList extends StatelessWidget {
                                           fontSize: 16),
                                     ),
 
+                                    snapshot.data!.docs[index]['timed']?
+                                    Text(
+                                      "E£ ${snapshot.data!.docs[index]["price"]} / hr",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 16,
+                                          color: Colors.teal),
+                                    ):
                                     Text(
                                       "E£ ${snapshot.data!.docs[index]["price"]}",
                                       style: const TextStyle(

@@ -50,11 +50,28 @@ class _SomeServicesState extends State<SomeServices> {
                             borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10)),
-                            child: Image.network(
+                            child:
+                            snapshot.data!.docs[index]['img'] != "none"?
+                             Image.network(
                               snapshot.data!.docs[index]['img'],
                               fit: BoxFit.cover,
                               height: 125,
                               width: 100,
+                            ):
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 125,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10)),
+                                  color: Colors.grey[300]),
+                              child: const Icon(
+                                Icons.photo,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                           Expanded(

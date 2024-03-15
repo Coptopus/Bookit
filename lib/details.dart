@@ -36,6 +36,7 @@ class _DetailsState extends State<Details> {
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            DateTime dt = (snapshot.data!['oneTimeDate'] as Timestamp).toDate();
             return ListView(
               children: [
                 SizedBox(
@@ -54,7 +55,7 @@ class _DetailsState extends State<Details> {
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.grey[300]),
                           child: const Icon(
-                            Icons.add_photo_alternate,
+                            Icons.photo,
                             size: 100,
                             color: Colors.grey,
                           ),
@@ -125,10 +126,11 @@ class _DetailsState extends State<Details> {
                                         color: Colors.teal),
                                   ),
                             if (snapshot.data!['oneTime'])
-                              const Text(
-                                "One Time Event.",
-                                style: TextStyle(
-                                    color: Colors.red,
+                              Text(
+                                "Event Date\n${dt.day} / ${dt.month} / ${dt.year}\n${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.deepOrange,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20),
                               ),
