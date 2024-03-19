@@ -2,6 +2,7 @@ import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Details extends StatefulWidget {
   final dynamic data;
@@ -73,6 +74,20 @@ class _DetailsState extends State<Details> {
                         style: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.w900),
                       ),
+                      FutureBuilder(
+                        future: FirebaseFirestore.instance.collection('users').doc(snapshot.data!["provider"]).get(),
+                        builder:
+                        (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return Text(
+                          "Owner info\nname: ${snapshot.data!["name"]}\nemail: ${snapshot.data!["email"]}",
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w900),
+                        );
+                          }
+                          return const Text("loading...");
+                        }, 
+                      ),
                       Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -102,6 +117,7 @@ class _DetailsState extends State<Details> {
                         ],
                       ),
                       Container(
+                        margin: const EdgeInsets.only(bottom: 80),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: Colors.teal[50],
