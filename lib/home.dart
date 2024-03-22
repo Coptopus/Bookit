@@ -1,3 +1,4 @@
+import 'package:bookit/checkout.dart';
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:bookit/settings.dart';
@@ -7,6 +8,9 @@ import 'package:bookit/subpages/provider_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'model/cart.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,11 +24,11 @@ class _HomeState extends State<Home> {
   List<Widget> listWidget = [
     const Dashboard(),
     const AllServices(),
-    const Dashboard(),
+    const Checkout(),
     const SettingsPage(),
   ];
 
-    List<Widget> listWidget2 = [
+  List<Widget> listWidget2 = [
     const Dashboard(),
     const SettingsPage(),
   ];
@@ -58,16 +62,36 @@ class _HomeState extends State<Home> {
                     unselectedItemColor: Colors.grey,
                     showUnselectedLabels: true,
                     showSelectedLabels: true,
-                    items: const [
-                      BottomNavigationBarItem(
+                    items: [
+                      const BottomNavigationBarItem(
                           icon: Icon(Icons.home_outlined), label: "Home"),
-                      BottomNavigationBarItem(
+                      const BottomNavigationBarItem(
                           icon: Icon(Icons.list_alt_outlined),
                           label: "Services"),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.shopping_cart_outlined),
+                          icon: Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              const Icon(Icons.shopping_cart_outlined),
+                              Consumer<Cart>(builder: (context, cart, child) {
+                                return Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  decoration: BoxDecoration(
+                                      color: cart.count != 0? Colors.blue: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(60)),
+                                  child: Text(
+                                    "${cart.count}",
+                                    style: TextStyle(
+                                      color: cart.count != 0? Colors.white: Colors.transparent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ));
+                              },)
+                            ],
+                          ),
                           label: "Cart"),
-                      BottomNavigationBarItem(
+                      const BottomNavigationBarItem(
                           icon: Icon(Icons.settings_outlined),
                           label: "Settings")
                     ]);

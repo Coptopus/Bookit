@@ -1,7 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
+import 'package:bookit/model/booking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'model/cart.dart';
 
 class Details extends StatefulWidget {
   final dynamic data;
@@ -21,14 +26,14 @@ class _DetailsState extends State<Details> {
       appBar: AppBar(
         title: appTitle,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.edit_calendar),
-        label: const Text("Book it!",
-            style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900)),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {},
+      //   icon: const Icon(Icons.edit_calendar),
+      //   label: const Text("Book it!",
+      //       style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900)),
+      //   backgroundColor: Colors.blue,
+      //   foregroundColor: Colors.white,
+      // ),
       body: FutureBuilder(
         future: FirebaseFirestore.instance
             .collection('services')
@@ -74,18 +79,21 @@ class _DetailsState extends State<Details> {
                             fontSize: 30, fontWeight: FontWeight.w900),
                       ),
                       FutureBuilder(
-                        future: FirebaseFirestore.instance.collection('users').doc(snapshot.data!["provider"]).get(),
-                        builder:
-                        (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
+                        future: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(snapshot.data!["provider"])
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
                             return Text(
-                          "Owner info\nname: ${snapshot.data!["name"]}\nemail: ${snapshot.data!["email"]}",
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w900),
-                        );
+                              "Owner info\nname: ${snapshot.data!["name"]}\nemail: ${snapshot.data!["email"]}",
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w900),
+                            );
                           }
                           return const Text("loading...");
-                        }, 
+                        },
                       ),
                       Container(
                           decoration: BoxDecoration(
@@ -116,7 +124,7 @@ class _DetailsState extends State<Details> {
                         ],
                       ),
                       Container(
-                        margin: const EdgeInsets.only(bottom: 80),
+                        // margin: const EdgeInsets.only(bottom: 80),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: Colors.teal[50],
@@ -155,7 +163,51 @@ class _DetailsState extends State<Details> {
                     ],
                   ),
                 ),
-                // Center(child: MaterialButton(onPressed: () {}, color: Colors.blue, textColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), child: const Text("Book it!", style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),),))
+                Consumer<Cart>(
+                  builder: (context, cart, child) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 70, vertical: 10),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Booking booking = Booking(
+                              serviceID: widget.data,
+                              price: double.parse(snapshot.data!["price"]));
+                          cart.add(booking);
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.success,
+                            animType: AnimType.bottomSlide,
+                            title: "Successful Booking!",
+                            desc:
+                                "You may proceed to checkout or book another service.",
+                            btnOkOnPress: () {},
+                          ).show();
+                        },
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(
+                              Icons.edit_calendar,
+                              size: 40,
+                            ),
+                            Text(
+                              "Book it!",
+                              style: TextStyle(
+                                  fontSize: 50, fontWeight: FontWeight.w900),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
               ],
             );
           }
