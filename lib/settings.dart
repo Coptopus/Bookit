@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Settings",
               style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
             ),

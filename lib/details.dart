@@ -2,7 +2,6 @@ import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Details extends StatefulWidget {
   final dynamic data;
