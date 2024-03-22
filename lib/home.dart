@@ -1,5 +1,6 @@
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
+import 'package:bookit/settings.dart';
 import 'package:bookit/subpages/all_services.dart';
 import 'package:bookit/subpages/customer_home.dart';
 import 'package:bookit/subpages/provider_home.dart';
@@ -20,7 +21,12 @@ class _HomeState extends State<Home> {
     const Dashboard(),
     const AllServices(),
     const Dashboard(),
+    const SettingsPage(),
+  ];
+
+    List<Widget> listWidget2 = [
     const Dashboard(),
+    const SettingsPage(),
   ];
 
   @override
@@ -99,7 +105,28 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: appTitle,
         ),
-        body: listWidget.elementAt(currentIndex));
+        body: FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .get(),
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              Map<String, dynamic> data =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              if (data['account_type'] == "Customer") {
+                return listWidget.elementAt(currentIndex);
+              } else {
+                return listWidget2.elementAt(currentIndex);
+              }
+            }
+            return const Center(
+                heightFactor: 500,
+                child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ));
+          },
+        ));
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:bookit/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,11 @@ Drawer appDrawer(BuildContext context) {
                 ListTile(
                   title: const Text("Settings"),
                   leading: const Icon(Icons.settings),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ));
+                  },
                 ),
                 ListTile(
                   title: const Text("Log Out"),

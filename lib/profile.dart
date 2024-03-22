@@ -1,3 +1,4 @@
+import 'package:bookit/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -52,9 +53,9 @@ class Profile extends StatelessWidget {
                   "icon": Icons.settings,
                   "label": "Settings",
                   "onPressed": () {
-                    if (kDebugMode) {
-                      print("Settings");
-                    }
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ));
                   }
                 },
                 {
