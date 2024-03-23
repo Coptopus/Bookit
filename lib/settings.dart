@@ -63,27 +63,26 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 240, 243, 255),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              "Settings",
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
-            ),
-            ListView.builder(
-              padding: const EdgeInsets.only(top: 10),
-              itemCount: buttons.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    MaterialButton(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 240, 243, 255),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                "Settings",
+                style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
+              ),
+              ListView.builder(
+                itemCount: buttons.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: MaterialButton(
                       onPressed: buttons[index]["onPressed"],
                       padding: const EdgeInsets.all(10),
                       color: Colors.white,
@@ -95,19 +94,16 @@ class SettingsPage extends StatelessWidget {
                               flex: 3,
                               child: Text(
                                 "${buttons[index]['label']}",
-                                style: const TextStyle(fontSize: 35),
+                                style: const TextStyle(fontSize: 30),
                               )),
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    )
-                  ],
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

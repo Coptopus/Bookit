@@ -217,30 +217,25 @@ class Profile extends StatelessWidget {
                     itemCount: buttons.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          MaterialButton(
-                            onPressed: buttons[index]["onPressed"],
-                            padding: const EdgeInsets.all(10),
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(child: Icon(buttons[index]["icon"])),
-                                Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      "${buttons[index]['label']}",
-                                      style: const TextStyle(fontSize: 35),
-                                    )),
-                              ],
-                            ),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: MaterialButton(
+                          onPressed: buttons[index]["onPressed"],
+                          padding: const EdgeInsets.all(10),
+                          color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(child: Icon(buttons[index]["icon"])),
+                              Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "${buttons[index]['label']}",
+                                    style: const TextStyle(fontSize: 30),
+                                  )),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          )
-                        ],
+                        ),
                       );
                     },
                   )

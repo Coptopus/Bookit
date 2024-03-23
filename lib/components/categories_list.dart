@@ -34,7 +34,7 @@ class CategoriesList extends StatelessWidget {
     return SizedBox(
       height: 125,
       child: ListView.builder(
-        padding: const EdgeInsets.only(left: 5, right: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         itemCount: categories.length,
         itemBuilder: (context, index) {
           return FutureBuilder(
@@ -78,12 +78,12 @@ class CategoriesList extends StatelessWidget {
                           Text(
                             categories[index]['title'],
                             style: const TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 18),
+                                fontWeight: FontWeight.w900, fontSize: 15),
                           ),
                           Text(
                             "${snapshot.data!.count} places",
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 15),
+                                color: Colors.grey[600], fontSize: 12),
                           )
                         ],
                       )),
@@ -97,7 +97,7 @@ class CategoriesList extends StatelessWidget {
             },
           );
         },
-        shrinkWrap: true,
+        // shrinkWrap: true,
         scrollDirection: Axis.horizontal,
       ),
     );
