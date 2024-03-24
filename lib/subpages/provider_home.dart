@@ -1,8 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/components/dash_banner.dart';
+import 'package:bookit/services/edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProviderHome extends StatefulWidget {
@@ -140,7 +141,7 @@ class _ProviderHomeState extends State<ProviderHome> {
                           trailing: PopupMenuButton(
                             surfaceTintColor: Colors.white,
                             color: Colors.white,
-                            onSelected: (value) {
+                            onSelected: (value) async {
                               if (value == "d") {
                                 //DELETE
                                 AwesomeDialog(
@@ -156,6 +157,13 @@ class _ProviderHomeState extends State<ProviderHome> {
                                         .collection('services')
                                         .doc(data[index].id)
                                         .delete();
+
+                                    if (data[index]['img'] != "none") {
+                                      FirebaseStorage.instance
+                                          .refFromURL(data[index]['img'])
+                                          .delete();
+                                    }
+
                                     if (!context.mounted) {
                                       return;
                                     }
@@ -167,9 +175,20 @@ class _ProviderHomeState extends State<ProviderHome> {
                                 ).show();
                               } else if (value == "e") {
                                 //EDIT
-                                if (kDebugMode) {
-                                  print("edit");
+                                DocumentSnapshot<Map<String, dynamic>> result =
+                                    await FirebaseFirestore.instance
+                                        .collection('services')
+                                        .doc(data[index].id)
+                                        .get();
+                                if (!context.mounted) {
+                                  return;
                                 }
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => EditService(
+                                    docID: data[index].id,
+                                    data: result,
+                                  ),
+                                ));
                               }
                             },
                             itemBuilder: (context) => [
