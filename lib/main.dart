@@ -7,6 +7,8 @@ import 'package:bookit/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import './model/cart.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,10 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider(create: (context) {
+      return Cart();
+    },
+    child: MaterialApp(
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
@@ -58,6 +63,7 @@ class _MainAppState extends State<MainApp> {
         "profile": (context) => const Profile(),
         "addServ": (context) => const AddService(),
       },
+    ),
     );
   }
 }

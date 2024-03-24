@@ -1,4 +1,5 @@
 import 'package:bookit/details.dart';
+import 'package:bookit/subpages/some_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,10 @@ class DashList extends StatelessWidget {
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SomeServices(categ: categ)));
+                  },
                   splashFactory: InkRipple.splashFactory,
                   child: const Text(
                     "Show all",
@@ -67,7 +71,7 @@ class DashList extends StatelessWidget {
                       child: Card(
                         color: Colors.white,
                         elevation: 2,
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        margin: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -94,13 +98,21 @@ class DashList extends StatelessWidget {
                                           fontSize: 16),
                                     ),
 
-                                    Text(
-                                      "E£ ${snapshot.data!.docs[index]["price"]}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 16,
-                                          color: Colors.teal),
-                                    ),
+                                    snapshot.data!.docs[index]['timed']
+                                        ? Text(
+                                            "E£ ${snapshot.data!.docs[index]["price"]} / hr",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 16,
+                                                color: Colors.teal),
+                                          )
+                                        : Text(
+                                            "E£ ${snapshot.data!.docs[index]["price"]}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 16,
+                                                color: Colors.teal),
+                                          ),
                                     if (snapshot.data!.docs[index]['oneTime'])
                                       const Text(
                                         "One Time Event.",
