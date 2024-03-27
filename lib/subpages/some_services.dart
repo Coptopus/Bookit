@@ -1,4 +1,4 @@
-import 'package:bookit/details.dart';
+import 'package:bookit/pages/details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

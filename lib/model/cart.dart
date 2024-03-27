@@ -5,6 +5,7 @@ class Cart with ChangeNotifier {
   // ignore: prefer_final_fields
   List<Booking> _bookings = [];
   double _price = 0.0;
+  
   void add(Booking booking) {
     _bookings.add(booking);
     _price += booking.price;

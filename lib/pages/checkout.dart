@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './model/cart.dart';
+import '../model/cart.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key});
@@ -73,8 +73,35 @@ class _CheckoutState extends State<Checkout> {
                                       child: ListTile(
                                         title:
                                             Text("${snapshot.data!["name"]}"),
-                                        subtitle: Text(
-                                            "Price: E£ ${cart.cartItems[index].price}"),
+                                        subtitle: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(snapshot.data!['timed']
+                                                ? cart.cartItems[index]
+                                                            .duration ==
+                                                        1
+                                                    ? "Price: E£ ${cart.cartItems[index].price} (${cart.cartItems[index].duration} hour)"
+                                                    : "Price: E£ ${cart.cartItems[index].price} (${cart.cartItems[index].duration} hours)"
+                                                : "Price: E£ ${cart.cartItems[index].price}"),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                    "${cart.cartItems[index].start.day}/${cart.cartItems[index].start.month}/${cart.cartItems[index].start.year}"),
+                                                snapshot.data!['timed']
+                                                    ? Text(
+                                                        "${cart.cartItems[index].start.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].start.minute.toString().padLeft(2, '0')} ~ ${cart.cartItems[index].end.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].end.minute.toString().padLeft(2, '0')}")
+                                                    : Text(
+                                                        "${cart.cartItems[index].start.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].start.minute.toString().padLeft(2, '0')}"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                         trailing: IconButton(
                                           icon: const Icon(
                                             Icons.delete_outlined,
