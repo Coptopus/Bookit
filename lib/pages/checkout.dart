@@ -1,3 +1,5 @@
+import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/payment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,13 +47,13 @@ class _CheckoutState extends State<Checkout> {
                                           ? Image.network(
                                               snapshot.data!['img'],
                                               fit: BoxFit.cover,
-                                              height: 75,
-                                              width: 75,
+                                              height: 100,
+                                              width: 100,
                                             )
                                           : Container(
                                               padding: const EdgeInsets.all(10),
-                                              height: 75,
-                                              width: 75,
+                                              height: 100,
+                                              width: 100,
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       const BorderRadius.only(
@@ -83,21 +85,20 @@ class _CheckoutState extends State<Checkout> {
                                                 ? cart.cartItems[index]
                                                             .duration ==
                                                         1
-                                                    ? "Price: E£ ${cart.cartItems[index].price} (${cart.cartItems[index].duration} hour)"
-                                                    : "Price: E£ ${cart.cartItems[index].price} (${cart.cartItems[index].duration} hours)"
-                                                : "Price: E£ ${cart.cartItems[index].price}"),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                    ? "Price: ${money.format(cart.cartItems[index].price)} (${cart.cartItems[index].duration} hour)"
+                                                    : "Price: ${money.format(cart.cartItems[index].price)} (${cart.cartItems[index].duration} hours)"
+                                                : "Price: ${money.format(cart.cartItems[index].price)}"),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                     "${cart.cartItems[index].start.day}/${cart.cartItems[index].start.month}/${cart.cartItems[index].start.year}"),
                                                 snapshot.data!['timed']
                                                     ? Text(
-                                                        "${cart.cartItems[index].start.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].start.minute.toString().padLeft(2, '0')} ~ ${cart.cartItems[index].end.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].end.minute.toString().padLeft(2, '0')}")
-                                                    : Text(
-                                                        "${cart.cartItems[index].start.hour.toString().padLeft(2, '0')}: ${cart.cartItems[index].start.minute.toString().padLeft(2, '0')}"),
+                                                        "${ftime.format(cart.cartItems[index].start)} ~ ${ftime.format(cart.cartItems[index].end)}")
+                                                    : Text(ftime.format(cart
+                                                        .cartItems[index]
+                                                        .start)),
                                               ],
                                             )
                                           ],
@@ -133,7 +134,7 @@ class _CheckoutState extends State<Checkout> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Total: E£ ${cart.totalPrice}",
+                            "Total: ${money.format(cart.totalPrice)}",
                             style: const TextStyle(
                                 color: Colors.teal,
                                 fontSize: 30,
@@ -141,7 +142,12 @@ class _CheckoutState extends State<Checkout> {
                           ),
                           if (cart.totalPrice != 0.0)
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      Payment(total: cart.totalPrice),
+                                ));
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15)),
                               color: Colors.teal,

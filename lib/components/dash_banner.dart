@@ -1,3 +1,4 @@
+import 'package:bookit/model/forrmatting.dart';
 import 'package:bookit/pages/details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -179,6 +180,9 @@ class ServiceSearch extends SearchDelegate {
               results.add(snapshot.data!.docs[i]);
             }
           }
+          if (results.isEmpty) {
+            return const Center(child: Text("No results found :(", style: TextStyle(color: Colors.black38, fontWeight: FontWeight.bold, fontSize: 20),),);
+          }
           return ListView.builder(
             itemCount: results.length,
             itemBuilder: (context, index) {
@@ -249,14 +253,14 @@ class ServiceSearch extends SearchDelegate {
                           ),
                           trailing: results[index]['timed']
                               ? Text(
-                                  "E£ ${results[index]['price']} / hr",
+                                  "${money.format(double.parse(results[index]['price']))} / hr",
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900),
                                 )
                               : Text(
-                                  "E£ ${results[index]['price']}",
+                                  money.format(double.parse(results[index]['price'])),
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 18,

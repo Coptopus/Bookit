@@ -1,3 +1,4 @@
+import 'package:bookit/model/forrmatting.dart';
 import 'package:bookit/pages/details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -89,14 +90,14 @@ class _AllServicesState extends State<AllServices> {
                           ),
                           trailing: snapshot.data!.docs[index]['timed']
                               ? Text(
-                                  "E£ ${snapshot.data!.docs[index]['price']} / hr",
+                                  "${money.format(double.parse(snapshot.data!.docs[index]['price']))} / hr",
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
                                 )
                               : Text(
-                                  "E£ ${snapshot.data!.docs[index]['price']}",
+                                  money.format(double.parse(snapshot.data!.docs[index]['price'])),
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 20,

@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/components/dash_banner.dart';
+import 'package:bookit/model/forrmatting.dart';
 import 'package:bookit/services/edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,8 +41,10 @@ class _ProviderHomeState extends State<ProviderHome> {
 
       data.isEmpty
           ? const Center(
+            heightFactor: 3,
               child: Text("No Services Yet. :(",
                   style: TextStyle(
+                    color: Colors.black45,
                     fontSize: 25,
                     fontWeight: FontWeight.w400,
                   )))
@@ -123,14 +126,14 @@ class _ProviderHomeState extends State<ProviderHome> {
                                 ),
                               data[index]['timed']
                                   ? Text(
-                                      "E£ ${data[index]['price']} / hr",
+                                      "${money.format(double.parse(data[index]['price']))} / hr",
                                       style: const TextStyle(
                                           color: Colors.teal,
                                           fontSize: 20,
                                           fontWeight: FontWeight.w900),
                                     )
                                   : Text(
-                                      "E£ ${data[index]['price']}",
+                                      money.format(double.parse(data[index]['price'])),
                                       style: const TextStyle(
                                           color: Colors.teal,
                                           fontSize: 20,
@@ -241,25 +244,24 @@ class _ProviderHomeState extends State<ProviderHome> {
         },
         child: Container(
           decoration: BoxDecoration(
-            backgroundBlendMode: BlendMode.color,
-            color: Colors.blueGrey[100],
-            border: Border.all(width: 2, color: Colors.blueGrey),
+            color: Colors.green[100],
+            border: Border.all(width: 2, color: Colors.green),
             borderRadius: BorderRadius.circular(15),
           ),
           height: 125,
           alignment: Alignment.center,
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.add,
-                color: Colors.blueGrey[700],
+                color: Colors.green,
                 size: 60,
               ),
               Text(
-                "(Add a service)",
-                style: TextStyle(fontSize: 25, color: Colors.blueGrey[700]),
+                "Add a service",
+                style: TextStyle(fontSize: 25, color: Colors.green),
               )
             ],
           ),

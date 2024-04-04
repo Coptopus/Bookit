@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
 import 'package:bookit/model/booking.dart';
+import 'package:bookit/model/forrmatting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,8 +52,6 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
-    var hours = dateTime.hour.toString().padLeft(2, '0');
-    var minutes = dateTime.minute.toString().padLeft(2, '0');
     return ChangeNotifierProvider(
       create: (context) => Counter(),
       child: Scaffold(
@@ -173,14 +172,15 @@ class _DetailsState extends State<Details> {
                             children: [
                               snapshot.data!["timed"]
                                   ? Text(
-                                      "E£ ${snapshot.data!["price"]} / hour",
+                                      "${money.format(double.parse(snapshot.data!["price"]))} / hour",
                                       style: const TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.w900,
                                           color: Colors.teal),
                                     )
                                   : Text(
-                                      "E£ ${snapshot.data!["price"]}",
+                                      money.format(double.parse(
+                                          snapshot.data!["price"])),
                                       style: const TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.w900,
@@ -188,7 +188,7 @@ class _DetailsState extends State<Details> {
                                     ),
                               if (snapshot.data!['oneTime'])
                                 Text(
-                                  "Event Date\n${dt.day} / ${dt.month} / ${dt.year}\n${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}",
+                                  "Event Date\n ${fdate.format(dt)}",
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       color: Colors.deepOrange,
@@ -232,39 +232,31 @@ class _DetailsState extends State<Details> {
                                       if (cart.cartItems.isNotEmpty && !read) {
                                         dateTime = cart.cartItems.last.end
                                             .add(const Duration(hours: 1));
-                                        hours = dateTime.hour
-                                            .toString()
-                                            .padLeft(2, '0');
-                                        minutes = dateTime.minute
-                                            .toString()
-                                            .padLeft(2, '0');
                                         read = true;
                                       }
                                       if (snapshot.data!['oneTime']) {
                                         dateTime = dt;
-                                        hours = dateTime.hour
-                                            .toString()
-                                            .padLeft(2, '0');
-                                        minutes = dateTime.minute
-                                            .toString()
-                                            .padLeft(2, '0');
                                         read = true;
                                       }
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(
-                                              "${dateTime.day}/${dateTime.month}/${dateTime.year}",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 25)),
-                                          Text("$hours:$minutes",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 25))
-                                        ],
-                                      );
+                                      return Text(fdate.format(dateTime),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 25), textAlign: TextAlign.center,);
+                                      // return Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.spaceAround,
+                                      //   children: [
+                                      //     Text(
+                                      //         "${dateTime.day}/${dateTime.month}/${dateTime.year}",
+                                      // style: const TextStyle(
+                                      //     fontWeight: FontWeight.bold,
+                                      //     fontSize: 25)),
+                                      //     Text("$hours:$minutes",
+                                      //         style: const TextStyle(
+                                      //             fontWeight: FontWeight.bold,
+                                      //             fontSize: 25))
+                                      //   ],
+                                      // );
                                     },
                                   )),
                               if (snapshot.data!['timed'])
@@ -355,12 +347,25 @@ class _DetailsState extends State<Details> {
                           onPressed: () {
                             //PERVENT DOUBLE BOOKING HERE
                             if (cart.cartItems.isNotEmpty &&
-                                (
-                                  (cart.cartItems.last.end.isBefore(dateTime) && (cart.cartItems.last.end.difference(dateTime).inMinutes >= -29 || cart.cartItems.last.start.difference(dateTime).inMinutes >= -29)) 
-                                        ||
-                                  (cart.cartItems.last.end.isAfter(dateTime) && (cart.cartItems.last.end.difference(dateTime).inMinutes <= 29 || cart.cartItems.last.start.difference(dateTime).inMinutes <= 29))
-                                )
-                              ) {
+                                ((cart.cartItems.last.end.isBefore(dateTime) &&
+                                        (cart.cartItems.last.end
+                                                    .difference(dateTime)
+                                                    .inMinutes >=
+                                                -29 ||
+                                            cart.cartItems.last.start
+                                                    .difference(dateTime)
+                                                    .inMinutes >=
+                                                -29)) ||
+                                    (cart.cartItems.last.end
+                                            .isAfter(dateTime) &&
+                                        (cart.cartItems.last.end
+                                                    .difference(dateTime)
+                                                    .inMinutes <=
+                                                29 ||
+                                            cart.cartItems.last.start
+                                                    .difference(dateTime)
+                                                    .inMinutes <=
+                                                29)))) {
                               AwesomeDialog(
                                 context: context,
                                 dialogType: DialogType.warning,

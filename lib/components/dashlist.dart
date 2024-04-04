@@ -1,3 +1,4 @@
+import 'package:bookit/model/forrmatting.dart';
 import 'package:bookit/pages/details.dart';
 import 'package:bookit/subpages/some_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -99,14 +100,14 @@ class DashList extends StatelessWidget {
 
                                     snapshot.data!.docs[index]['timed']
                                         ? Text(
-                                            "E£ ${snapshot.data!.docs[index]["price"]} / hr",
+                                            "${money.format(double.parse(snapshot.data!.docs[index]["price"]))} / hr",
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 16,
                                                 color: Colors.teal),
                                           )
                                         : Text(
-                                            "E£ ${snapshot.data!.docs[index]["price"]}",
+                                            money.format(double.parse(snapshot.data!.docs[index]["price"])),
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 16,
