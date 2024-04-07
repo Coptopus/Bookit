@@ -1,3 +1,4 @@
+import 'package:bookit/model/forrmatting.dart';
 import 'package:bookit/pages/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -126,7 +127,7 @@ class Profile extends StatelessWidget {
                                     Text(
                                       "${data['points']}",
                                       style: const TextStyle(
-                                          fontSize: 80,
+                                          fontSize: 50,
                                           fontWeight: FontWeight.w900,
                                           color: Colors.white),
                                     ),
@@ -159,7 +160,7 @@ class Profile extends StatelessWidget {
                                       "Earn more points",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 25,
                                           fontWeight: FontWeight.w900),
                                     ),
                                     MaterialButton(
@@ -181,36 +182,34 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         )
-                      : Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            margin: const EdgeInsets.symmetric(vertical: 20),
-                            height: 200,
-                            decoration: BoxDecoration(
-                                color: Colors.teal[300],
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "\$ ${data['points']}",
-                                  style: const TextStyle(
-                                      fontSize: 80,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white),
-                                ),
-                                const Text(
-                                  "Revenue",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
+                      : Container(
+                        padding: const EdgeInsets.all(20),
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        height: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.teal[300],
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              money.format(data['points']),
+                              style: const TextStyle(
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white),
                             ),
-                          ),
+                            const Text(
+                              "Revenue",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
+                      ),
                   ListView.builder(
                     padding: const EdgeInsets.only(top: 0, bottom: 10),
                     physics: const NeverScrollableScrollPhysics(),

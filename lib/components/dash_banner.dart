@@ -35,51 +35,68 @@ class _DashBannerState extends State<DashBanner> {
               snapshot.data!.data() as Map<String, dynamic>;
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Stack(
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushNamed("profile");
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(60)),
-                          width: 60,
-                          height: 60,
-                          child: data['account_type'] == "Customer"
-                              ? const Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: 50,
-                                )
-                              : const Icon(
-                                  Icons.business,
-                                  color: Colors.white,
-                                  size: 50,
-                                ),
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed("profile");
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(60)),
+                        width: 60,
+                        height: 60,
+                        child: data['account_type'] == "Customer"
+                            ? const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 50,
+                              )
+                            : const Icon(
+                                Icons.business,
+                                color: Colors.white,
+                                size: 50,
+                              ),
                       ),
-                      data['account_type'] == "Customer"
-                          ? Text(
-                              "Hello, \n${data['name']}! \nWhat are we up to today?",
-                              style: const TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              "Welcome, ${data['name']}.",
-                              style: const TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                    ],
-                  ),
+                    ),
+                    data['account_type'] == "Customer"
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text("Hello, ",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                    "${data['name']}!",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: Colors.blue[700],
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                ],
+                              ),
+                              const Text(
+                                "What are we up to today?",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )
+                        : Text(
+                            "Welcome, ${data['name']}.",
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                  ],
                 ),
                 data['account_type'] != "Customer"
                     ? IconButton(
@@ -157,11 +174,6 @@ class ServiceSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text("");
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
     return FutureBuilder(
       future: FirebaseFirestore.instance
           .collection('services')
@@ -171,17 +183,35 @@ class ServiceSearch extends SearchDelegate {
         if (snapshot.connectionState == ConnectionState.done) {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> results = [];
           for (var i = 0; i < snapshot.data!.docs.length; i++) {
-            if ("${snapshot.data!.docs[i]['name']}".contains(query) ||
-                "${snapshot.data!.docs[i]['name']}".startsWith(query) ||
-                "${snapshot.data!.docs[i]['name']}"
-                    .contains(query.toUpperCase()) ||
-                "${snapshot.data!.docs[i]['name']}"
-                    .startsWith(query.toUpperCase())) {
+            if (snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toUpperCase()
+                    .contains(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toUpperCase()
+                    .startsWith(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toLowerCase()
+                    .startsWith(query)) {
               results.add(snapshot.data!.docs[i]);
             }
           }
           if (results.isEmpty) {
-            return const Center(child: Text("No results found :(", style: TextStyle(color: Colors.black38, fontWeight: FontWeight.bold, fontSize: 20),),);
+            return const Center(
+              child: Text(
+                "No results found :(",
+                style: TextStyle(
+                    color: Colors.black38,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            );
           }
           return ListView.builder(
             itemCount: results.length,
@@ -229,7 +259,11 @@ class ServiceSearch extends SearchDelegate {
                       Expanded(
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10),
-                          title: Text(results[index]['name']),
+                          title: Text(
+                            results[index]['name'],
+                            maxLines: 2,
+                            softWrap: true,
+                          ),
                           titleTextStyle: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -239,6 +273,7 @@ class ServiceSearch extends SearchDelegate {
                             children: [
                               Text(
                                 results[index]['location'],
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -260,7 +295,154 @@ class ServiceSearch extends SearchDelegate {
                                       fontWeight: FontWeight.w900),
                                 )
                               : Text(
-                                  money.format(double.parse(results[index]['price'])),
+                                  money.format(
+                                      double.parse(results[index]['price'])),
+                                  style: const TextStyle(
+                                      color: Colors.teal,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
+        return const Center(
+            heightFactor: 500,
+            child: CircularProgressIndicator(color: Colors.blue));
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('services')
+          .orderBy('name')
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          List<QueryDocumentSnapshot<Map<String, dynamic>>> results = [];
+          for (var i = 0; i < snapshot.data!.docs.length; i++) {
+            if (snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toUpperCase()
+                    .contains(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toUpperCase()
+                    .startsWith(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(query) ||
+                snapshot.data!.docs[i]['name']
+                    .toString()
+                    .toLowerCase()
+                    .startsWith(query)) {
+              results.add(snapshot.data!.docs[i]);
+            }
+          }
+          if (results.isEmpty) {
+            return const Center(
+              child: Text(
+                "No results found :(",
+                style: TextStyle(
+                    color: Colors.black38,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            );
+          }
+          return ListView.builder(
+            itemCount: results.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Details(data: results[index].id),
+                  ));
+                },
+                child: Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                  surfaceTintColor: Colors.white,
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
+                        child: results[index]['img'] != "none"
+                            ? Image.network(
+                                results[index]['img'],
+                                fit: BoxFit.cover,
+                                height: 100,
+                                width: 75,
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(10),
+                                height: 100,
+                                width: 75,
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10)),
+                                    color: Colors.grey[300]),
+                                child: const Icon(
+                                  Icons.photo,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(10),
+                          title: Text(
+                            results[index]['name'],
+                            maxLines: 2,
+                            softWrap: true,
+                          ),
+                          titleTextStyle: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                results[index]['location'],
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              if (results[index]['oneTime'])
+                                const Text(
+                                  "One Time Event.",
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                            ],
+                          ),
+                          trailing: results[index]['timed']
+                              ? Text(
+                                  "${money.format(double.parse(results[index]['price']))} / hr",
+                                  style: const TextStyle(
+                                      color: Colors.teal,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900),
+                                )
+                              : Text(
+                                  money.format(
+                                      double.parse(results[index]['price'])),
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 18,

@@ -66,7 +66,11 @@ class _AllServicesState extends State<AllServices> {
                       Expanded(
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10),
-                          title: Text(snapshot.data!.docs[index]['name']),
+                          title: Text(
+                            snapshot.data!.docs[index]['name'],
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           titleTextStyle: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -76,6 +80,7 @@ class _AllServicesState extends State<AllServices> {
                             children: [
                               Text(
                                 snapshot.data!.docs[index]['location'],
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -97,7 +102,8 @@ class _AllServicesState extends State<AllServices> {
                                       fontWeight: FontWeight.w900),
                                 )
                               : Text(
-                                  money.format(double.parse(snapshot.data!.docs[index]['price'])),
+                                  money.format(double.parse(
+                                      snapshot.data!.docs[index]['price'])),
                                   style: const TextStyle(
                                       color: Colors.teal,
                                       fontSize: 20,

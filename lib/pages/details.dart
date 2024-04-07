@@ -378,6 +378,7 @@ class _DetailsState extends State<Details> {
                                 btnCancelOnPress: () {
                                   Booking booking = Booking(
                                       serviceID: widget.data,
+                                      providerID: snapshot.data!["provider"],
                                       start: dateTime,
                                       duration: dur,
                                       end: dateTime.add(Duration(hours: dur)),
@@ -404,6 +405,7 @@ class _DetailsState extends State<Details> {
                             } else {
                               Booking booking = Booking(
                                   serviceID: widget.data,
+                                  providerID: snapshot.data!["provider"],
                                   start: dateTime,
                                   duration: dur,
                                   end: dateTime.add(Duration(hours: dur)),

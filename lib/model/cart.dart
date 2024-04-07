@@ -18,6 +18,11 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void reset(){
+    _bookings.clear();
+    _price = 0.0;
+  }
+
   int get count {
     return _bookings.length;
   }
