@@ -91,20 +91,36 @@ class _DashBannerState extends State<DashBanner> {
                               )
                             ],
                           )
-                        : Text(
-                            "Welcome, ${data['name']}.",
-                            style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
+                        : Row(
+                            children: [
+                              const Text(
+                                "Welcome, ",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${data['name']}.",
+                                style: TextStyle(
+                                  color: Colors.blueGrey[700],
+                                    fontSize: 25, fontWeight: FontWeight.w900),
+                              )
+                            ],
                           ),
                   ],
                 ),
                 data['account_type'] != "Customer"
-                    ? IconButton(
-                        icon: const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.blueGrey,
-                        ),
-                        onPressed: () {},
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.notifications_outlined,
+                              color: Colors.blueGrey,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       )
                     : Row(
                         crossAxisAlignment: CrossAxisAlignment.start,

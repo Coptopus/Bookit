@@ -10,7 +10,7 @@ class Welcome extends StatelessWidget {
     return Scaffold(
       // appBar: AppBar(title: appTitle),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         children: [
           Container(
               margin: const EdgeInsets.only(top: 20), child: const LogoAuth()),

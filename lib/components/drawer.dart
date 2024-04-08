@@ -1,4 +1,5 @@
 import 'package:bookit/pages/settings.dart';
+import 'package:bookit/subpages/settings_wab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ Drawer appDrawer(BuildContext context) {
                     leading: const Icon(Icons.settings),
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SettingsPage(),
+                        builder: (context) => const Settingz(),
                       ));
                     },
                   ),

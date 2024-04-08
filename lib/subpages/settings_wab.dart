@@ -58,25 +58,26 @@ List buttons = [
   }
 ];
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class Settingz extends StatelessWidget {
+  const Settingz({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 240, 243, 255),
+      appBar: AppBar(foregroundColor: Colors.blue, title: const Text("Settings", style: TextStyle(fontWeight: FontWeight.bold),),),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // const Text(
-            //   "Settings",
-            //   style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
-            // ),
+            const Text(
+              "Settings",
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
+            ),
             ListView.builder(
-              padding: const EdgeInsets.only(top: 0),
+              padding: const EdgeInsets.only(top: 10),
               itemCount: buttons.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {

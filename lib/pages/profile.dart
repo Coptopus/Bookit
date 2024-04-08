@@ -12,6 +12,13 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 240, 243, 255),
+        appBar: AppBar(
+          foregroundColor: Colors.blue,
+          title: const Text(
+            "Profile",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         body: FutureBuilder(
           future: FirebaseFirestore.instance
               .collection('users')
@@ -183,33 +190,33 @@ class Profile extends StatelessWidget {
                           ],
                         )
                       : Container(
-                        padding: const EdgeInsets.all(20),
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        height: 200,
-                        decoration: BoxDecoration(
-                            color: Colors.teal[300],
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              money.format(data['points']),
-                              style: const TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white),
-                            ),
-                            const Text(
-                              "Revenue",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
+                          padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.symmetric(vertical: 20),
+                          height: 200,
+                          decoration: BoxDecoration(
+                              color: Colors.teal[300],
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                money.format(data['points']),
+                                style: const TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white),
+                              ),
+                              const Text(
+                                "Revenue",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
                   ListView.builder(
                     padding: const EdgeInsets.only(top: 0, bottom: 10),
                     physics: const NeverScrollableScrollPhysics(),

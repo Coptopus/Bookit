@@ -25,6 +25,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -36,3 +37,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/Splash.png
+  android_12:
+    color: "#ffffff"
+    image: assets/Splash.png
