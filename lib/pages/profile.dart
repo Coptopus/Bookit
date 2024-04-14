@@ -1,4 +1,5 @@
 import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/reservation_log.dart';
 import 'package:bookit/pages/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,9 +35,7 @@ class Profile extends StatelessWidget {
                         "icon": Icons.list,
                         "label": "Reserved Services",
                         "onPressed": () {
-                          if (kDebugMode) {
-                            print("Services");
-                          }
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Log(),));
                         }
                       }
                     : {

@@ -18,6 +18,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
+  bool vacant = true;
   DateTime dateTime = DateTime(DateTime.now().year, DateTime.now().month,
       DateTime.now().day, DateTime.now().hour + 2, 0);
   int dur = 1;
@@ -153,20 +154,19 @@ class _DetailsState extends State<Details> {
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "${snapshot.data!["location"]}\n",
+                              "${snapshot.data!["location"]}",
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                         Container(
-                          // margin: const EdgeInsets.only(bottom: 80),
                           padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.symmetric(vertical: 15),
                           decoration: BoxDecoration(
                               color: Colors.teal[50],
                               border: Border.all(color: Colors.teal),
                               borderRadius: BorderRadius.circular(10)),
-                          width: 500,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -197,6 +197,132 @@ class _DetailsState extends State<Details> {
                                 ),
                             ],
                           ),
+                        ),
+                        //View Reservations
+                        FutureBuilder(
+                          future: FirebaseFirestore.instance
+                              .collection('services')
+                              .doc(widget.data)
+                              .collection('reservations')
+                              .where('StartTime',
+                                  isGreaterThanOrEqualTo: DateTime.now())
+                              .orderBy('StartTime')
+                              .get(),
+                          builder: (context, result) {
+                            if (result.connectionState ==
+                                ConnectionState.done) {
+                              if (result.hasData &&
+                                  result.data!.docs.isNotEmpty) {
+                                return snapshot.data!['timed']
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Reservations:",
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.purple),
+                                          ),
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemCount: result.data!.size,
+                                            itemBuilder: (context, index) {
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Divider(),
+                                                  Text(
+                                                    "${fdate.format(DateTime.parse(result.data!.docs[index]['StartTime'].toDate().toString()))} ~ ${ftime.format(DateTime.parse(result.data!.docs[index]['EndTime'].toDate().toString()))}",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors
+                                                            .deepPurple[900]),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                          const Divider()
+                                        ],
+                                      )
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Number Of Current Bookings:",
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.purple),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                    color: Colors.black)),
+                                            child: Text(
+                                              result.data!.docs.length
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 28,
+                                                  color: result.data!.docs
+                                                              .length <=
+                                                          10
+                                                      ? Colors.green
+                                                      : result.data!.docs
+                                                                  .length <=
+                                                              30
+                                                          ? Colors.amber[800]
+                                                          : Colors.red[700]),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                              } else {
+                                return const Center(
+                                  heightFactor: 1.15,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Divider(),
+                                      Icon(
+                                        Icons.access_time_outlined,
+                                        size: 50,
+                                        color: Colors.black26,
+                                      ),
+                                      Text(
+                                        "No reservations on this service yet.",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black38),
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                            return const Center(
+                              heightFactor: 500,
+                              child: CircularProgressIndicator(
+                                color: Colors.lightBlue,
+                              ),
+                            );
+                          },
                         ),
                         Container(
                           padding: const EdgeInsets.all(15),
@@ -229,7 +355,9 @@ class _DetailsState extends State<Details> {
                                       : null,
                                   child: Consumer<Cart>(
                                     builder: (context, cart, child) {
-                                      if (cart.cartItems.isNotEmpty && !read) {
+                                      if (cart.cartItems.isNotEmpty &&
+                                          !read &&
+                                          !snapshot.data!['oneTime']) {
                                         dateTime = cart.cartItems.last.end
                                             .add(const Duration(hours: 1));
                                         read = true;
@@ -238,10 +366,13 @@ class _DetailsState extends State<Details> {
                                         dateTime = dt;
                                         read = true;
                                       }
-                                      return Text(fdate.format(dateTime),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 25), textAlign: TextAlign.center,);
+                                      return Text(
+                                        fdate.format(dateTime),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25),
+                                        textAlign: TextAlign.center,
+                                      );
                                       // return Row(
                                       //   mainAxisAlignment:
                                       //       MainAxisAlignment.spaceAround,
@@ -341,114 +472,214 @@ class _DetailsState extends State<Details> {
                   Consumer<Cart>(
                     builder: (context, cart, child) {
                       return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 70, vertical: 10),
-                        child: MaterialButton(
-                          onPressed: () {
-                            //PERVENT DOUBLE BOOKING HERE
-                            if (cart.cartItems.isNotEmpty &&
-                                ((cart.cartItems.last.end.isBefore(dateTime) &&
-                                        (cart.cartItems.last.end
-                                                    .difference(dateTime)
-                                                    .inMinutes >=
-                                                -29 ||
-                                            cart.cartItems.last.start
-                                                    .difference(dateTime)
-                                                    .inMinutes >=
-                                                -29)) ||
-                                    (cart.cartItems.last.end
-                                            .isAfter(dateTime) &&
-                                        (cart.cartItems.last.end
-                                                    .difference(dateTime)
-                                                    .inMinutes <=
-                                                29 ||
-                                            cart.cartItems.last.start
-                                                    .difference(dateTime)
-                                                    .inMinutes <=
-                                                29)))) {
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.warning,
-                                animType: AnimType.bottomSlide,
-                                title: "Attention!",
-                                desc:
-                                    "The date and time you picked for this service may overlap with another reservation in your cart, you may want to pick another timeslot.",
-                                btnCancelText: "Ignore",
-                                btnOkText: "Return",
-                                btnCancelOnPress: () {
-                                  Booking booking = Booking(
-                                      serviceID: widget.data,
-                                      providerID: snapshot.data!["provider"],
-                                      start: dateTime,
-                                      duration: dur,
-                                      end: dateTime.add(Duration(hours: dur)),
-                                      price: (double.parse(
-                                              snapshot.data!["price"])) *
-                                          dur);
-                                  cart.add(booking);
-                                  AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.success,
-                                    animType: AnimType.bottomSlide,
-                                    title: "Successful Booking!",
-                                    desc:
-                                        "You may proceed to checkout or book another service.",
-                                    btnOkOnPress: () {
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                              "home", (route) => false);
-                                    },
-                                  ).show();
-                                },
-                                btnOkOnPress: () {},
-                              ).show();
-                            } else {
-                              Booking booking = Booking(
-                                  serviceID: widget.data,
-                                  providerID: snapshot.data!["provider"],
-                                  start: dateTime,
-                                  duration: dur,
-                                  end: dateTime.add(Duration(hours: dur)),
-                                  price:
-                                      (double.parse(snapshot.data!["price"])) *
-                                          dur);
-                              cart.add(booking);
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.success,
-                                animType: AnimType.bottomSlide,
-                                title: "Successful Booking!",
-                                desc:
-                                    "You may proceed to checkout or book another service.",
-                                btnOkOnPress: () {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      "home", (route) => false);
-                                },
-                              ).show();
-                            }
-                          },
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(
-                                Icons.edit_calendar,
-                                size: 40,
-                              ),
-                              Text(
-                                "Book it!",
-                                style: TextStyle(
-                                    fontSize: 50, fontWeight: FontWeight.w900),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 70, vertical: 10),
+                          child: FutureBuilder(
+                            future: FirebaseFirestore.instance
+                              .collection('services')
+                              .doc(widget.data)
+                              .collection('reservations')
+                              .where('StartTime',
+                                  isGreaterThanOrEqualTo: DateTime.now())
+                              .orderBy('StartTime')
+                              .get(),
+                            builder: (context, result) {
+                              if (result.connectionState ==
+                                  ConnectionState.done) {
+                                return MaterialButton(
+                                  onPressed: () {
+                                    if (snapshot.data!['timed']) {
+                                      //Check for overlap (This applies to timed services)
+                                    for (var i = 0; i < result.data!.docs.length; i++) {
+                                      if (
+                                        (DateTime.parse(result.data!.docs[i]['StartTime'].toDate().toString()).isBefore(dateTime)                                   //Current reserved timeslot start < attempted booking start
+                                      && (
+                                        dateTime.isBefore(DateTime.parse(result.data!.docs[i]['EndTime'].toDate().toString()))                                      //Attempted start < Current reserved ts end
+                                        ))
+                                        ||
+                                        (dateTime.isBefore(DateTime.parse(result.data!.docs[i]['StartTime'].toDate().toString()))                                   //Attempted start < Current reserved ts start
+                                      && 
+                                        dateTime.add(Duration(hours: dur)).isAfter(DateTime.parse(result.data!.docs[i]['StartTime'].toDate().toString())))          //Attempted end > Current reserved ts start
+                                        ||
+                                        (DateTime.parse(result.data!.docs[i]['StartTime'].toDate().toString()).isAtSameMomentAs(dateTime) 
+                                        || DateTime.parse(result.data!.docs[i]['EndTime'].toDate().toString()).isAtSameMomentAs(dateTime.add(Duration(hours: dur)))) //Unallowed equalities
+                                        ){
+                                        vacant = false;
+                                      break;
+                                      } else {vacant = true;}
+                                    }
+                                    }
+
+                                    if(vacant){
+                                      //Can't choose a time in the past, can we? :)
+                                    if (dateTime
+                                        .isBefore(DateTime.now())) {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.bottomSlide,
+                                        title: "Error",
+                                        desc:
+                                            "Please select a valid date and time.",
+                                        btnOkOnPress: () {},
+                                      ).show();
+                                    }
+
+                                    //PERVENT DOUBLE BOOKING HERE
+                                    else if (cart.cartItems.isNotEmpty &&
+                                        ((cart.cartItems.last.end
+                                                    .isBefore(dateTime) &&
+                                                (cart.cartItems.last.end
+                                                            .difference(
+                                                                dateTime)
+                                                            .inMinutes >=
+                                                        -29 ||
+                                                    cart.cartItems.last.start
+                                                            .difference(
+                                                                dateTime)
+                                                            .inMinutes >=
+                                                        -29)) ||
+                                            (cart.cartItems.last.end
+                                                    .isAfter(dateTime) &&
+                                                (cart.cartItems.last.end
+                                                            .difference(
+                                                                dateTime)
+                                                            .inMinutes <=
+                                                        29 ||
+                                                    cart.cartItems.last.start
+                                                            .difference(
+                                                                dateTime)
+                                                            .inMinutes <=
+                                                        29)))) {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.warning,
+                                        animType: AnimType.bottomSlide,
+                                        title: "Attention!",
+                                        desc:
+                                            "The date and time you picked for this service may overlap with another reservation in your cart, you may want to pick another timeslot.",
+                                        btnCancelText: "Ignore",
+                                        btnOkText: "Return",
+                                        btnCancelOnPress: () {
+                                          Booking booking = Booking(
+                                              serviceID: widget.data,
+                                              providerID:
+                                                  snapshot.data!["provider"],
+                                              start: dateTime,
+                                              duration: dur,
+                                              end: dateTime
+                                                  .add(Duration(hours: dur)),
+                                              price: (double.parse(snapshot
+                                                      .data!["price"])) *
+                                                  dur);
+                                          cart.add(booking);
+                                          AwesomeDialog(
+                                            context: context,
+                                            dialogType: DialogType.success,
+                                            animType: AnimType.bottomSlide,
+                                            title: "Successful Booking!",
+                                            desc:
+                                                "You may proceed to checkout or book another service.",
+                                            btnOkOnPress: () {
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                      "home", (route) => false);
+                                            },
+                                          ).show();
+                                        },
+                                        btnOkOnPress: () {},
+                                      ).show();
+                                    } else {
+                                      Booking booking = Booking(
+                                          serviceID: widget.data,
+                                          providerID:
+                                              snapshot.data!["provider"],
+                                          start: dateTime,
+                                          duration: dur,
+                                          end: dateTime
+                                              .add(Duration(hours: dur)),
+                                          price: (double.parse(
+                                                  snapshot.data!["price"])) *
+                                              dur);
+                                      cart.add(booking);
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.success,
+                                        animType: AnimType.bottomSlide,
+                                        title: "Successful Booking!",
+                                        desc:
+                                            "You may proceed to checkout or book another service.",
+                                        btnOkOnPress: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  "home", (route) => false);
+                                        },
+                                      ).show();
+                                    }
+                                    }else{AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.bottomSlide,
+                                        title: "Sorry",
+                                        desc:
+                                            "This timeslot is already reserved, try another.",
+                                        btnOkOnPress: () {},
+                                      ).show();}
+                                  },
+                                  color: Colors.blue,
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.edit_calendar,
+                                        size: 40,
+                                      ),
+                                      Text(
+                                        "Book it!",
+                                        style: TextStyle(
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return MaterialButton(
+                                  onPressed: () {},
+                                  disabledColor: Colors.grey[800],
+                                  color: Colors.blue,
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.edit_calendar,
+                                        size: 40,
+                                      ),
+                                      Text(
+                                        "Book it!",
+                                        style: TextStyle(
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                            },
+                          ));
                     },
                   )
                 ],

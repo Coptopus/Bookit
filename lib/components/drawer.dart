@@ -1,8 +1,9 @@
-import 'package:bookit/pages/settings.dart';
 import 'package:bookit/subpages/settings_wab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/reservation_log.dart';
 
 Drawer appDrawer(BuildContext context) {
   return Drawer(
@@ -77,7 +78,11 @@ Drawer appDrawer(BuildContext context) {
                       ? ListTile(
                           title: const Text("My Reservations"),
                           leading: const Icon(Icons.receipt),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Log(),
+                            ));
+                          },
                         )
                       : ListTile(
                           title: const Text("My Services"),
