@@ -1,3 +1,4 @@
+import 'package:bookit/pages/my_services.dart';
 import 'package:bookit/subpages/settings_wab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,7 +88,9 @@ Drawer appDrawer(BuildContext context) {
                       : ListTile(
                           title: const Text("My Services"),
                           leading: const Icon(Icons.point_of_sale),
-                          onTap: () {},
+                          onTap: () {Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const MyServices(),
+                            ));},
                         ),
                   ListTile(
                     title: const Text("Settings"),

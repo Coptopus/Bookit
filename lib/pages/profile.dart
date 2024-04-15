@@ -1,9 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/my_services.dart';
 import 'package:bookit/pages/reservation_log.dart';
-import 'package:bookit/pages/settings.dart';
+import 'package:bookit/subpages/settings_wab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
@@ -35,25 +36,31 @@ class Profile extends StatelessWidget {
                         "icon": Icons.list,
                         "label": "Reserved Services",
                         "onPressed": () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Log(),));
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const Log(),
+                          ));
                         }
                       }
                     : {
                         "icon": Icons.point_of_sale,
                         "label": "My Services",
                         "onPressed": () {
-                          if (kDebugMode) {
-                            print("Services");
-                          }
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const MyServices(),
+                          ));
                         }
                       },
                 {
                   "icon": Icons.star,
                   "label": "Bookit +",
                   "onPressed": () {
-                    if (kDebugMode) {
-                      print("Premium");
-                    }
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.noHeader,
+                      animType: AnimType.bottomSlide,
+                      title: "Coming soon!",
+                      btnOkOnPress: () {},
+                    ).show();
                   }
                 },
                 {
@@ -61,7 +68,7 @@ class Profile extends StatelessWidget {
                   "label": "Settings",
                   "onPressed": () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
+                      builder: (context) => const Settingz(),
                     ));
                   }
                 },
@@ -170,7 +177,15 @@ class Profile extends StatelessWidget {
                                           fontWeight: FontWeight.w900),
                                     ),
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.noHeader,
+                                          animType: AnimType.bottomSlide,
+                                          title: "Coming soon!",
+                                          btnOkOnPress: () {},
+                                        ).show();
+                                      },
                                       color: Colors.white,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
