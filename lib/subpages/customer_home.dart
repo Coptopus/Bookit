@@ -1,6 +1,6 @@
 import 'package:bookit/components/categories_list.dart';
 import 'package:bookit/components/dash_banner.dart';
-import 'package:bookit/widgets.dart';
+import 'package:bookit/components/dashlist.dart';
 import 'package:flutter/material.dart';
 
 class CustomerHome extends StatefulWidget {

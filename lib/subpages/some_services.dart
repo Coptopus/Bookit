@@ -1,4 +1,5 @@
-import 'package:bookit/details.dart';
+import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -50,34 +51,37 @@ class _SomeServicesState extends State<SomeServices> {
                             borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10)),
-                            child:
-                            snapshot.data!.docs[index]['img'] != "none"?
-                             Image.network(
-                              snapshot.data!.docs[index]['img'],
-                              fit: BoxFit.cover,
-                              height: 125,
-                              width: 100,
-                            ):
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 125,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10)),
-                                  color: Colors.grey[300]),
-                              child: const Icon(
-                                Icons.photo,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            child: snapshot.data!.docs[index]['img'] != "none"
+                                ? Image.network(
+                                    snapshot.data!.docs[index]['img'],
+                                    fit: BoxFit.cover,
+                                    height: 125,
+                                    width: 100,
+                                  )
+                                : Container(
+                                    padding: const EdgeInsets.all(10),
+                                    height: 125,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10)),
+                                        color: Colors.grey[300]),
+                                    child: const Icon(
+                                      Icons.photo,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                           ),
                           Expanded(
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(10),
-                              title: Text(snapshot.data!.docs[index]['name']),
+                              title: Text(
+                                snapshot.data!.docs[index]['name'],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               titleTextStyle: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -87,6 +91,7 @@ class _SomeServicesState extends State<SomeServices> {
                                 children: [
                                   Text(
                                     snapshot.data!.docs[index]['location'],
+                                    overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -101,14 +106,15 @@ class _SomeServicesState extends State<SomeServices> {
                               ),
                               trailing: snapshot.data!.docs[index]['timed']
                                   ? Text(
-                                      "E£ ${snapshot.data!.docs[index]['price']} / hr",
+                                      "${money.format(double.parse(snapshot.data!.docs[index]['price']))} / hr",
                                       style: const TextStyle(
                                           color: Colors.teal,
                                           fontSize: 20,
                                           fontWeight: FontWeight.w900),
                                     )
                                   : Text(
-                                      "E£ ${snapshot.data!.docs[index]['price']}",
+                                      money.format(double.parse(
+                                          snapshot.data!.docs[index]['price'])),
                                       style: const TextStyle(
                                           color: Colors.teal,
                                           fontSize: 20,

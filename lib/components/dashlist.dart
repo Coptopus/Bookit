@@ -1,4 +1,5 @@
-import 'package:bookit/details.dart';
+import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/details.dart';
 import 'package:bookit/subpages/some_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,6 @@ class DashList extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 2,
             itemBuilder: (context, index) {
-              // index += increment;
               return FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection('services')
@@ -100,14 +100,14 @@ class DashList extends StatelessWidget {
 
                                     snapshot.data!.docs[index]['timed']
                                         ? Text(
-                                            "E£ ${snapshot.data!.docs[index]["price"]} / hr",
+                                            "${money.format(double.parse(snapshot.data!.docs[index]["price"]))} / hr",
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 16,
                                                 color: Colors.teal),
                                           )
                                         : Text(
-                                            "E£ ${snapshot.data!.docs[index]["price"]}",
+                                            money.format(double.parse(snapshot.data!.docs[index]["price"])),
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 16,
@@ -167,48 +167,3 @@ class DashList extends StatelessWidget {
     );
   }
 }
-
-List services = [
-  {
-    "img": "assets/soccer.jpg",
-    "name": "Soccer pitch",
-    "type": "sports",
-    "desc": "A soccer pitch available for booking.",
-    "location": "Nasr City",
-    "rating": 5,
-    "numberOfRatings": 203,
-    "price": 50
-  },
-  {
-    "img": "assets/padel.jpg",
-    "name": "Padel court",
-    "type": "sports",
-    "desc":
-        "Bring your friends and enjoy a few games of Padel equipped with a Padel and a couple tennis balls!",
-    "location": "Sixth of October City",
-    "rating": 4,
-    "numberOfRatings": 357,
-    "price": 100
-  },
-  {
-    "img": "assets/baraka.jpg",
-    "name": "Baraka Fried Chicken",
-    "type": "food",
-    "desc": "Best fried chicken you'll ever have!",
-    "location": "Al montazah",
-    "rating": 5,
-    "numberOfRatings": 500,
-    "price": 85
-  },
-  {
-    "img": "assets/italian.jpg",
-    "name": "Virgollini's",
-    "type": "food",
-    "desc":
-        "A sophisticated restaurant offering an assortment of exquisite dishes.",
-    "location": "Zamalek, Cairo",
-    "rating": 5,
-    "numberOfRatings": 100,
-    "price": 150
-  },
-];

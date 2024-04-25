@@ -1,9 +1,9 @@
 import 'package:bookit/auth/login.dart';
 import 'package:bookit/firebase_options.dart';
-import 'package:bookit/home.dart';
-import 'package:bookit/profile.dart';
+import 'package:bookit/pages/home.dart';
+import 'package:bookit/pages/profile.dart';
 import 'package:bookit/services/add.dart';
-import 'package:bookit/welcome.dart';
+import 'package:bookit/pages/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

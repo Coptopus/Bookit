@@ -1,7 +1,7 @@
-import 'package:bookit/checkout.dart';
+import 'package:bookit/pages/checkout.dart';
 import 'package:bookit/components/drawer.dart';
 import 'package:bookit/components/logoauth.dart';
-import 'package:bookit/settings.dart';
+import 'package:bookit/pages/settings.dart';
 import 'package:bookit/subpages/all_services.dart';
 import 'package:bookit/subpages/customer_home.dart';
 import 'package:bookit/subpages/provider_home.dart';
@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'model/cart.dart';
+import '../model/cart.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

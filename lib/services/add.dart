@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:core';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:bookit/model/forrmatting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -122,9 +123,6 @@ class _AddServiceState extends State<AddService> {
 
   @override
   Widget build(BuildContext context) {
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -191,15 +189,15 @@ class _AddServiceState extends State<AddService> {
                                 onPressed: () async {
                                   await getImage();
                                 },
-                                color: Colors.blueGrey,
-                                textColor: Colors.white,
+                                color: Colors.amber,
+                                textColor: Colors.black,
                               )
                             : ButtonAuth(
                                 label: "Get Image",
                                 onPressed: () async {
                                   await getImage();
                                 },
-                                color: Colors.blueGrey,
+                                color: Colors.green,
                                 textColor: Colors.white,
                               ),
                       ],
@@ -441,7 +439,7 @@ class _AddServiceState extends State<AddService> {
                                 await pickDateTime();
                               },
                               child: Text(
-                                  "${dateTime.day}/${dateTime.month}/${dateTime.year}\n$hours:$minutes",
+                                  fdate.format(dateTime),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -473,7 +471,7 @@ class _AddServiceState extends State<AddService> {
                   Center(
                       heightFactor: 2,
                       child: ButtonAuth(
-                        color: Colors.blueGrey,
+                        color: Colors.green,
                         textColor: Colors.white,
                         label: "Add",
                         onPressed: () async {

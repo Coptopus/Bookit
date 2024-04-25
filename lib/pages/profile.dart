@@ -1,7 +1,10 @@
-import 'package:bookit/settings.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:bookit/model/forrmatting.dart';
+import 'package:bookit/pages/my_services.dart';
+import 'package:bookit/pages/reservation_log.dart';
+import 'package:bookit/subpages/settings_wab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
@@ -11,6 +14,13 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 240, 243, 255),
+        appBar: AppBar(
+          foregroundColor: Colors.blue,
+          title: const Text(
+            "Profile",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         body: FutureBuilder(
           future: FirebaseFirestore.instance
               .collection('users')
@@ -26,27 +36,31 @@ class Profile extends StatelessWidget {
                         "icon": Icons.list,
                         "label": "Reserved Services",
                         "onPressed": () {
-                          if (kDebugMode) {
-                            print("Services");
-                          }
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const Log(),
+                          ));
                         }
                       }
                     : {
                         "icon": Icons.point_of_sale,
                         "label": "My Services",
                         "onPressed": () {
-                          if (kDebugMode) {
-                            print("Services");
-                          }
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const MyServices(),
+                          ));
                         }
                       },
                 {
                   "icon": Icons.star,
                   "label": "Bookit +",
                   "onPressed": () {
-                    if (kDebugMode) {
-                      print("Premium");
-                    }
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.noHeader,
+                      animType: AnimType.bottomSlide,
+                      title: "Coming soon!",
+                      btnOkOnPress: () {},
+                    ).show();
                   }
                 },
                 {
@@ -54,7 +68,7 @@ class Profile extends StatelessWidget {
                   "label": "Settings",
                   "onPressed": () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
+                      builder: (context) => const Settingz(),
                     ));
                   }
                 },
@@ -126,7 +140,7 @@ class Profile extends StatelessWidget {
                                     Text(
                                       "${data['points']}",
                                       style: const TextStyle(
-                                          fontSize: 80,
+                                          fontSize: 50,
                                           fontWeight: FontWeight.w900,
                                           color: Colors.white),
                                     ),
@@ -159,11 +173,19 @@ class Profile extends StatelessWidget {
                                       "Earn more points",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 25,
                                           fontWeight: FontWeight.w900),
                                     ),
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.noHeader,
+                                          animType: AnimType.bottomSlide,
+                                          title: "Coming soon!",
+                                          btnOkOnPress: () {},
+                                        ).show();
+                                      },
                                       color: Colors.white,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -181,34 +203,32 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         )
-                      : Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            margin: const EdgeInsets.symmetric(vertical: 20),
-                            height: 200,
-                            decoration: BoxDecoration(
-                                color: Colors.teal[300],
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "\$ ${data['points']}",
-                                  style: const TextStyle(
-                                      fontSize: 80,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white),
-                                ),
-                                const Text(
-                                  "Revenue",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
+                      : Container(
+                          padding: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.symmetric(vertical: 20),
+                          height: 200,
+                          decoration: BoxDecoration(
+                              color: Colors.teal[300],
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                money.format(data['points']),
+                                style: const TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white),
+                              ),
+                              const Text(
+                                "Revenue",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
                           ),
                         ),
                   ListView.builder(

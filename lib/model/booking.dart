@@ -1,7 +1,16 @@
 class Booking {
   String serviceID;
-  // DateTime dateTime;
+  String providerID;
+  DateTime start;
+  int duration;
+  DateTime end;
   double price;
   Booking(
-      {required this.serviceID, /*required this.dateTime,*/ required this.price});
+      {required this.serviceID,
+      required this.providerID,
+      required this.start,
+      required this.duration,
+      required this.end,
+      required this.price,
+      });
 }

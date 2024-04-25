@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.0.7
+  intl: ^0.18.1
   path: ^1.9.0
   provider: ^6.1.1
 
@@ -24,6 +25,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -35,3 +37,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/Splash.png
+  android_12:
+    color: "#ffffff"
+    image: assets/Splash.png
