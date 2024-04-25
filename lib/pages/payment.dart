@@ -341,7 +341,7 @@ class _PaymentState extends State<Payment> {
                                       'StartTime': cart.cartItems[i].start,
                                       'Duration': cart.cartItems[i].duration,
                                       'EndTime': cart.cartItems[i].end,
-                                      'Price': cart.cartItems[i].price
+                                      'Price': cart.redeemed? (cart.cartItems[i].price)*((1000+cart.pointsRedeemed)*0.001) : cart.cartItems[i].price
                                     });
 
                                     //SET: Add the price of each service to their owner's points (revenue),
@@ -354,12 +354,20 @@ class _PaymentState extends State<Payment> {
                                   }
                                   //BONUS: Notification to SP!
 
-                                  //SET: Add 10% (and round to the nearest int) of the paid price to the current users points (if he didn't redeem - more on that later),
-                                  var pointsAdded =
-                                      ((cart.totalPrice) * 0.1).ceil();
-                                  await users.doc(userID).update({
-                                    'points': FieldValue.increment(pointsAdded)
-                                  });
+                                  //SET: Add 10% (and round to the nearest int) of the paid price to the current users points (if he didn't redeem),
+                                  if (cart.redeemed) {
+                                    await users.doc(userID).update({
+                                      'points': FieldValue.increment(
+                                          cart.pointsRedeemed)
+                                    });
+                                  } else {
+                                    var pointsAdded =
+                                        ((cart.totalPrice) * 0.1).ceil();
+                                    await users.doc(userID).update({
+                                      'points':
+                                          FieldValue.increment(pointsAdded)
+                                    });
+                                  }
 
                                   isLoading = false;
                                   setState(() {});

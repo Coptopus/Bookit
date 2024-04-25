@@ -23,7 +23,8 @@ class _ProviderHomeState extends State<ProviderHome> {
 
   getServiceData() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('services').orderBy('name')
+        .collection('services')
+        .orderBy('name')
         .where('provider', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
     data.addAll(querySnapshot.docs);
@@ -43,7 +44,7 @@ class _ProviderHomeState extends State<ProviderHome> {
 
       data.isEmpty
           ? const Center(
-            heightFactor: 3,
+              heightFactor: 3,
               child: Text("No Services Yet. :(",
                   style: TextStyle(
                     color: Colors.black45,
@@ -72,7 +73,11 @@ class _ProviderHomeState extends State<ProviderHome> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyService(data: data[index].id,),));
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyService(
+                      data: data[index].id,
+                    ),
+                  ));
                 },
                 child: Card(
                   margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -110,7 +115,10 @@ class _ProviderHomeState extends State<ProviderHome> {
                       Expanded(
                         child: ListTile(
                             contentPadding: const EdgeInsets.all(10),
-                            title: Text(data[index]['name'], overflow: TextOverflow.ellipsis,),
+                            title: Text(
+                              data[index]['name'],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             titleTextStyle: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -119,7 +127,8 @@ class _ProviderHomeState extends State<ProviderHome> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  data[index]['location'], overflow: TextOverflow.ellipsis,
+                                  data[index]['location'],
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -139,7 +148,8 @@ class _ProviderHomeState extends State<ProviderHome> {
                                             fontWeight: FontWeight.w900),
                                       )
                                     : Text(
-                                        money.format(double.parse(data[index]['price'])),
+                                        money.format(
+                                            double.parse(data[index]['price'])),
                                         style: const TextStyle(
                                             color: Colors.teal,
                                             fontSize: 20,
@@ -159,20 +169,69 @@ class _ProviderHomeState extends State<ProviderHome> {
                                     animType: AnimType.bottomSlide,
                                     title: "WARNING",
                                     desc:
-                                        "Are you sure you want to delete ${data[index]['name']}?\n(This can't be undone)",
+                                        "Are you sure you want to delete ${data[index]['name']} and refund current reservations?\n(This can't be undone)",
                                     btnOkText: "Yes",
                                     btnOkOnPress: () async {
+                                      //Check for any reservations before deleting then issue refunds
+
+                                      var resCount = await FirebaseFirestore
+                                          .instance
+                                          .collection('services')
+                                          .doc(data[index].id)
+                                          .collection('reservations')
+                                          .where('StartTime',
+                                              isGreaterThanOrEqualTo:
+                                                  DateTime.now())
+                                          .count()
+                                          .get();
+
+                                      var penalty = ((resCount.count)! *
+                                              double.parse(
+                                                  data[index]['price'])) *
+                                          -1;
+
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .update({
+                                        'points': FieldValue.increment(penalty)
+                                      });
+
+                                      List reservations = [];
+
+                                      QuerySnapshot response =
+                                          await FirebaseFirestore.instance
+                                              .collection('services')
+                                              .doc(data[index].id)
+                                              .collection('reservations')
+                                              .get();
+
+                                      reservations = response.docs
+                                          .map((e) => e.id)
+                                          .toList();
+                                      for (var i = 0;
+                                          i < reservations.length;
+                                          i++) {
+                                        await FirebaseFirestore.instance
+                                            .collection('services')
+                                            .doc(data[index].id)
+                                            .collection('reservations')
+                                            .doc(reservations[i])
+                                            .delete();
+                                      }
+
                                       await FirebaseFirestore.instance
                                           .collection('services')
                                           .doc(data[index].id)
                                           .delete();
-                
+
                                       if (data[index]['img'] != "none") {
                                         FirebaseStorage.instance
                                             .refFromURL(data[index]['img'])
                                             .delete();
                                       }
-                
+
                                       if (!context.mounted) {
                                         return;
                                       }
@@ -184,8 +243,8 @@ class _ProviderHomeState extends State<ProviderHome> {
                                   ).show();
                                 } else if (value == "e") {
                                   //EDIT
-                                  DocumentSnapshot<Map<String, dynamic>> result =
-                                      await FirebaseFirestore.instance
+                                  DocumentSnapshot<Map<String, dynamic>>
+                                      result = await FirebaseFirestore.instance
                                           .collection('services')
                                           .doc(data[index].id)
                                           .get();

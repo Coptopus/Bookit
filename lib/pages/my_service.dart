@@ -171,42 +171,45 @@ class _MyServiceState extends State<MyService> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Divider(),
+                                          const Text(
+                                            "Number Of Current Bookings:",
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.purple),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                    color: Colors.black)),
+                                            child: Text(
+                                              result.data!.docs.length
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 28,
+                                                  color: result.data!.docs
+                                                              .length <=
+                                                          10
+                                                      ? Colors.green
+                                                      : result.data!.docs
+                                                                  .length <=
+                                                              30
+                                                          ? Colors.amber[800]
+                                                          : Colors.red[700]),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       const Divider(),
-                                      const Text(
-                                        "Number Of Current Bookings:",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.purple),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Colors.black)),
-                                        child: Text(
-                                          result.data!.docs.length.toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 28,
-                                              color: result.data!.docs.length <=
-                                                      10
-                                                  ? Colors.green
-                                                  : result.data!.docs.length <=
-                                                          30
-                                                      ? Colors.amber[800]
-                                                      : Colors.red[700]),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
                                       const Text(
                                         "Reservations:",
                                         style: TextStyle(
@@ -256,7 +259,7 @@ class _MyServiceState extends State<MyService> {
                                           );
                                         },
                                       ),
-                                      const Divider()
+                                      const Divider(),
                                     ],
                                   ),
                                 ],
@@ -296,6 +299,54 @@ class _MyServiceState extends State<MyService> {
                     ],
                   ),
                 ),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('services')
+                      .doc(widget.data)
+                      .collection('reservations')
+                      .get(),
+                  builder: (context, snapshot2) {
+                    if (snapshot2.connectionState == ConnectionState.done) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Total Revenue from this service:",
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: Colors.black)),
+                              child: Text(
+                                money.format(((snapshot2.data!.docs.length) *
+                                    (double.parse(snapshot.data!["price"])))),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 28,
+                                    color: Colors.teal),
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        ),
+                      );
+                    }
+                    return const Center(
+                      heightFactor: 500,
+                      child: CircularProgressIndicator(
+                        color: Colors.lightBlue,
+                      ),
+                    );
+                  },
+                ),
               ],
             );
           }
@@ -307,3 +358,4 @@ class _MyServiceState extends State<MyService> {
     );
   }
 }
+//Add more information like total revenue and total number of bookings

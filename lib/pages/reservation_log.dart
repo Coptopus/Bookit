@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookit/model/forrmatting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +37,7 @@ class _LogState extends State<Log> {
           .map((e) => {
                 'ServiceId': services[i],
                 'ServiceDat': serviceDat[i],
+                'ReservationID': e.id,
                 'Reservation': e.data()
               })
           .toList());
@@ -89,15 +91,16 @@ class _LogState extends State<Log> {
       ),
       body: loading
           ? const Center(
-              child: Text("Loading"),
+              heightFactor: 500,
+              child: CircularProgressIndicator(
+                color: Colors.lightBlue,
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //CURRENTLY RESERVED
-                  //Add Cancelation algorithm ;)
                   const Row(
                     children: [
                       Icon(
@@ -225,52 +228,87 @@ class _LogState extends State<Log> {
                                                                   FontWeight
                                                                       .bold),
                                                         ),
-                                                  if (dayta[index]['ServiceDat']
-                                                      ['oneTime'])
-                                                    const Text(
-                                                      "One Time Event.",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
                                                 ],
                                               ),
                                               trailing: dayta[index]
                                                       ['ServiceDat']['timed']
                                                   ? Column(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                            money.format(dayta[index]['Reservation']['Price']),
+                                                      children: [
+                                                        Expanded(
+                                                          child: Text(
+                                                            money.format(dayta[
+                                                                        index][
+                                                                    'Reservation']
+                                                                ['Price']),
                                                             style: const TextStyle(
-                                                                color: Colors.teal,
+                                                                color:
+                                                                    Colors.teal,
                                                                 fontSize: 20,
                                                                 fontWeight:
-                                                                    FontWeight.w900),
+                                                                    FontWeight
+                                                                        .w900),
                                                           ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
                                                             "${dayta[index]['Reservation']['Duration']} hour(s)",
                                                             style: const TextStyle(
-                                                                color: Colors.teal,
+                                                                color:
+                                                                    Colors.teal,
                                                                 fontSize: 20,
                                                                 fontWeight:
-                                                                    FontWeight.w900),
+                                                                    FontWeight
+                                                                        .w900),
                                                           ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                  : Text(
-                                                      money.format(dayta[index]
-                                                              ['Reservation']
-                                                          ['Price']),
-                                                      style: const TextStyle(
-                                                          color: Colors.teal,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.w900),
+                                                        ),
+                                                        if (dayta[index]
+                                                                ['ServiceDat']
+                                                            ['oneTime'])
+                                                          const Expanded(
+                                                            child: Text(
+                                                              "One Time Event.",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Text(
+                                                            money.format(dayta[
+                                                                        index][
+                                                                    'Reservation']
+                                                                ['Price']),
+                                                            style: const TextStyle(
+                                                                color:
+                                                                    Colors.teal,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w900),
+                                                          ),
+                                                        ),
+                                                        if (dayta[index]
+                                                                ['ServiceDat']
+                                                            ['oneTime'])
+                                                          const Expanded(
+                                                            child: Text(
+                                                              "One Time Event.",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                      ],
                                                     ),
                                             ),
                                           ),
@@ -280,28 +318,111 @@ class _LogState extends State<Log> {
                                   ),
                                   IconButton(
                                       onPressed: () {
-                                        print("Cancel");
+                                        AwesomeDialog(
+                                                context: context,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20),
+                                                dialogType: DialogType.question,
+                                                animType: AnimType.bottomSlide,
+                                                title: "Cancel Reservation?",
+                                                desc:
+                                                    "You'll only get a refund if you cancel more than 24 hours before the reservation date.",
+                                                btnOkOnPress: () async {
+                                                  //Cancel Algorithm
+                                                  if (DateTime.parse(dayta[
+                                                                          index]
+                                                                      [
+                                                                      'Reservation']
+                                                                  ['StartTime']
+                                                              .toDate()
+                                                              .toString())
+                                                          .difference(
+                                                              DateTime.now()) >
+                                                      const Duration(
+                                                          hours: 24)) {
+                                                    //Deduct revenue from Service Provider
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('users')
+                                                        .doc(dayta[index]
+                                                                ['ServiceDat']
+                                                            ['provider'])
+                                                        .update({
+                                                      'points': FieldValue
+                                                          .increment((dayta[
+                                                                          index]
+                                                                      [
+                                                                      'Reservation']
+                                                                  ['Price']) *
+                                                              -1)
+                                                    });
+                                                  }
+                                                  //Deduct points
+                                                  var pointsDeducted = ((dayta[
+                                                                      index][
+                                                                  'Reservation']
+                                                              ['Price']) *
+                                                          0.1)
+                                                      .ceil();
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('users')
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser!.uid)
+                                                      .update({
+                                                    'points':
+                                                        FieldValue.increment(
+                                                            pointsDeducted * -1)
+                                                  });
+                                                  //Delete reservation
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('services')
+                                                      .doc(dayta[index]
+                                                          ['ServiceId'])
+                                                      .collection(
+                                                          'reservations')
+                                                      .doc(dayta[index]
+                                                          ['ReservationID'])
+                                                      .delete();
+                                                  if (!context.mounted) {
+                                                    return;
+                                                  }
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                          MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const Log(),
+                                                  ));
+                                                },
+                                                btnOkText: "Yes",
+                                                btnCancelOnPress: () {},
+                                                btnCancelText: "No")
+                                            .show();
                                       },
                                       icon: const Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                        Icon(
-                                          Icons.cancel,
-                                          shadows: [
-                                            Shadow(
-                                                color: Colors.black,
-                                                offset: Offset(0, 0),
-                                                blurRadius: 15),
-                                          ],
-                                          color: Colors.deepOrange,
-                                        ),
-                                        Icon(Icons.clear, color: Colors.black, size: 19)
-                                      ]))
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.cancel,
+                                              shadows: [
+                                                Shadow(
+                                                    color: Colors.black,
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 15),
+                                              ],
+                                              color: Colors.deepOrange,
+                                            ),
+                                            Icon(Icons.clear,
+                                                color: Colors.black, size: 19)
+                                          ]))
                                 ],
                               );
                             },
                           ),
                         ),
+
                   const Divider(),
 
                   //PREVIOUSLY RESERVED

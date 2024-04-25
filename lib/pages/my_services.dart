@@ -25,7 +25,10 @@ class _MyServicesState extends State<MyServices> {
       backgroundColor: const Color.fromARGB(255, 240, 243, 255),
       appBar: AppBar(
         foregroundColor: Colors.blue,
-        title: const Text("My services", style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          "My services",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: FutureBuilder(
         future: services
@@ -135,9 +138,61 @@ class _MyServicesState extends State<MyServices> {
                                       animType: AnimType.bottomSlide,
                                       title: "WARNING",
                                       desc:
-                                          "Are you sure you want to delete ${snapshot.data!.docs[index]['name']}?\n(This can't be undone)",
+                                          "Are you sure you want to delete ${snapshot.data!.docs[index]['name']} and refund current reservations?\n(This can't be undone)",
                                       btnOkText: "Yes",
                                       btnOkOnPress: () async {
+                                        //Check for any reservations before deleting then issue refunds
+
+                                        var resCount = await FirebaseFirestore
+                                            .instance
+                                            .collection('services')
+                                            .doc(snapshot.data!.docs[index].id)
+                                            .collection('reservations')
+                                            .where('StartTime',
+                                                isGreaterThanOrEqualTo:
+                                                    DateTime.now())
+                                            .count()
+                                            .get();
+
+                                        var penalty = ((resCount.count)! *
+                                                double.parse(snapshot.data!
+                                                    .docs[index]['price'])) *
+                                            -1;
+
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .update({
+                                          'points':
+                                              FieldValue.increment(penalty)
+                                        });
+
+                                        List reservations = [];
+
+                                        QuerySnapshot response =
+                                            await FirebaseFirestore.instance
+                                                .collection('services')
+                                                .doc(snapshot
+                                                    .data!.docs[index].id)
+                                                .collection('reservations')
+                                                .get();
+
+                                        reservations = response.docs
+                                            .map((e) => e.id)
+                                            .toList();
+                                        for (var i = 0;
+                                            i < reservations.length;
+                                            i++) {
+                                          await FirebaseFirestore.instance
+                                              .collection('services')
+                                              .doc(
+                                                  snapshot.data!.docs[index].id)
+                                              .collection('reservations')
+                                              .doc(reservations[i])
+                                              .delete();
+                                        }
+
                                         await FirebaseFirestore.instance
                                             .collection('services')
                                             .doc(snapshot.data!.docs[index].id)
